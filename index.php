@@ -17,8 +17,8 @@
 
 
 <?php 
-//Queries
-include('csb_c.php');
+//Connect
+include('connect.php');
 
 // Primary Ladders
 include('./ladders/ldr_pla.php');
