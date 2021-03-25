@@ -21,12 +21,12 @@
 include('csb_c.php');
 
 // Primary Ladders
-include('ldr_pla.php');
-include('ldr_eco.php');
-include('ldr_com.php');
-include('ldr_res.php');
-include('ldr_exp.php');
-include('ldr_due.php');
+include('./ladders/ldr_pla.php');
+include('./ladders/ldr_eco.php');
+include('./ladders/ldr_com.php');
+include('./ladders/ldr_res.php');
+include('./ladders/ldr_exp.php');
+include('./ladders/ldr_due.php');
 
 // blacklist
 $banned_users = array("STEAM_0:1:25306470", "x");
