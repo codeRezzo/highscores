@@ -39,6 +39,11 @@ include('./queries/qry_res.php');
 include('./queries/qry_exp.php');
 include('./queries/qry_due.php');
 
+//Graph queries (actual graph creation includes are at the bottom of the page ctrl+f tag: GRAPHINC)
+include('./queries/qry_grp_gbank.php');
+include('./queries/qry_grp_bank.php');
+include('./queries/qry_grp_pla.php');
+include('./queries/qry_grp_com.php');
 
 ?>
 
@@ -363,13 +368,13 @@ include('./queries/qry_due.php');
                     <div class="col-sm">
                         <div class="card-body">
                           <h4 class="card-title text-center">Top Gang Wealth</h4>
-                          <canvas id="Chart1-bar" width="180" height="180"></canvas>
+                          <canvas id="chr-gbank-bar" width="180" height="180"></canvas>
                         </div>
                     </div>
                     <div class="col-sm">
                         <div class="card-body">
                           <h4 class="card-title text-center">Top Bank Wealth</h4>
-                          <canvas id="Chart2-bar" width="180" height="180"></canvas>
+                          <canvas id="chr-bank-bar" width="180" height="180"></canvas>
                         </div>
                     </div>
                 </div>
@@ -378,13 +383,13 @@ include('./queries/qry_due.php');
                   <div class="col-sm">
                       <div class="card-body">
                         <h4 class="card-title text-center">Top Playtime</h4>
-                        <canvas id="Chart3-bar" width="180" height="180"></canvas>
+                        <canvas id="chr-pla-bar" width="180" height="180"></canvas>
                       </div>
                   </div>
                   <div class="col-sm">
                       <div class="card-body">
                         <h4 class="card-title text-center">Top Combat</h4>
-                        <canvas id="Chart4-bar" width="180" height="180"></canvas>
+                        <canvas id="chr-com-bar" width="180" height="180"></canvas>
                       </div>
                   </div>
                 </div>
@@ -403,13 +408,13 @@ include('./queries/qry_due.php');
                     <div class="col-sm">
                         <div class="card-body">
                           <h4 class="card-title text-center">Top Gang Wealth</h4>
-                          <canvas id="Chart1-pie" width="180" height="180"></canvas>
+                          <canvas id="chr-gbank-pie" width="180" height="180"></canvas>
                         </div>
                     </div>
                     <div class="col-sm">
                         <div class="card-body">
                           <h4 class="card-title text-center">Top Bank Wealth</h4>
-                          <canvas id="Chart2-pie" width="180" height="180"></canvas>
+                          <canvas id="chr-bank-pie" width="180" height="180"></canvas>
                         </div>
                     </div>
                 </div>
@@ -418,13 +423,13 @@ include('./queries/qry_due.php');
                   <div class="col-sm">
                       <div class="card-body">
                         <h4 class="card-title text-center">Top Playtime</h4>
-                        <canvas id="Chart3-pie" width="180" height="180"></canvas>
+                        <canvas id="chr-pla-pie" width="180" height="180"></canvas>
                       </div>
                   </div>
                   <div class="col-sm">
                       <div class="card-body">
                         <h4 class="card-title text-center">Top Combat</h4>
-                        <canvas id="Chart4-pie" width="180" height="180"></canvas>
+                        <canvas id="chr-com-pie" width="180" height="180"></canvas>
                       </div>
                   </div>
                 </div>
@@ -443,8 +448,9 @@ include('./queries/qry_due.php');
   </div>
 
   <script>
-
 // This nasty from a performance perspective but it works so screw  it.
+// I'll get it all moved to its own file in the end.
+
 // Close Home screen and visit Ladders selection screen.
 $('#goladders').click(function(e){
     $('#home').fadeOut('slow', function(){
@@ -566,359 +572,21 @@ $('#godueling').click(function(e){
         $('#dueling').fadeIn('slow');
     });
 });
-
-
- </script>
-  <script src="./vendor/chartjs/Chart.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
-
-<script>
-// Set One - BAR
-<?php 
-$query = "SELECT * FROM `cs_gangs` ORDER BY `gang_bank` DESC LIMIT 10";
-$sql = mysqli_query($csdb_link, $query);
-$gang_bank= array();
-$names= array();
-while($r = mysqli_fetch_assoc($sql)) {
-    $gang_bank[] = $r['gang_bank'];
-    $names[] = $r['gang_name'];
-}
-?>
-var ctx = document.getElementById('Chart1-bar').getContext('2d');
-var myChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: <?php print json_encode($names); ?>,
-        datasets: [{
-            label: 'Gang Bank',
-            data: <?php print json_encode($gang_bank); ?>,
-            backgroundColor: [
-                'rgba(255, 102, 102, 0.5)',
-                'rgba(255, 140, 102, 0.5)',
-                'rgba(255, 179, 102, 0.5)',
-                'rgba(255, 217, 102, 0.5)',
-                'rgba(255, 255, 102, 0.5)',
-                'rgba(217, 255, 102, 0.5)',
-                'rgba(179, 255, 102, 0.5)',
-                'rgba(140, 255, 102, 0.5)',
-                'rgba(102, 255, 102, 0.5)',
-                'rgba(102, 255, 140, 0.5)'
-            ],
-            borderColor: [
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)'
-            ],
-            borderWidth: 1
-        }]
-    }
-});
-
-// Set One - PIE
-var ctx = document.getElementById('Chart1-pie').getContext('2d');
-var myChart = new Chart(ctx, {
-    type: 'pie',
-    data: {
-        labels: <?php print json_encode($names); ?>,
-        datasets: [{
-            label: 'Gang Bank',
-            data: <?php print json_encode($gang_bank); ?>,
-            backgroundColor: [
-                'rgba(255, 102, 102, 0.5)',
-                'rgba(255, 140, 102, 0.5)',
-                'rgba(255, 179, 102, 0.5)',
-                'rgba(255, 217, 102, 0.5)',
-                'rgba(255, 255, 102, 0.5)',
-                'rgba(217, 255, 102, 0.5)',
-                'rgba(179, 255, 102, 0.5)',
-                'rgba(140, 255, 102, 0.5)',
-                'rgba(102, 255, 102, 0.5)',
-                'rgba(102, 255, 140, 0.5)'
-            ],
-            borderColor: [
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)'
-            ],
-            borderWidth: 1
-        }]
-    }
-});
-
-// Set Two - BAR
-<?php 
-$query = "SELECT * FROM `cs_banks_primary` ORDER BY `bank` DESC LIMIT 10";
-$sql = mysqli_query($csdb_link, $query);
-$banks= array();
-$names= array();
-while($r = mysqli_fetch_assoc($sql)) {
-    $banks[] = $r['bank'];
-    $names[] = $r['name'];
-}
-?>
-var ctx = document.getElementById('Chart2-bar').getContext('2d');
-var myChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: <?php print json_encode($names); ?>,
-        datasets: [{
-            label: 'Bank',
-            data: <?php print json_encode($banks); ?>,
-            backgroundColor: [
-                'rgba(255, 102, 102, 0.5)',
-                'rgba(255, 140, 102, 0.5)',
-                'rgba(255, 179, 102, 0.5)',
-                'rgba(255, 217, 102, 0.5)',
-                'rgba(255, 255, 102, 0.5)',
-                'rgba(217, 255, 102, 0.5)',
-                'rgba(179, 255, 102, 0.5)',
-                'rgba(140, 255, 102, 0.5)',
-                'rgba(102, 255, 102, 0.5)',
-                'rgba(102, 255, 140, 0.5)'
-            ],
-            borderColor: [
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)'
-            ],
-            borderWidth: 1
-        }]
-    }
-});
-
-// Set Two - PIE
-var ctx = document.getElementById('Chart2-pie').getContext('2d');
-var myChart = new Chart(ctx, {
-    type: 'pie',
-    data: {
-        labels: <?php print json_encode($names); ?>,
-        datasets: [{
-            label: 'Bank',
-            data: <?php print json_encode($banks); ?>,
-            backgroundColor: [
-                'rgba(255, 102, 102, 0.5)',
-                'rgba(255, 140, 102, 0.5)',
-                'rgba(255, 179, 102, 0.5)',
-                'rgba(255, 217, 102, 0.5)',
-                'rgba(255, 255, 102, 0.5)',
-                'rgba(217, 255, 102, 0.5)',
-                'rgba(179, 255, 102, 0.5)',
-                'rgba(140, 255, 102, 0.5)',
-                'rgba(102, 255, 102, 0.5)',
-                'rgba(102, 255, 140, 0.5)'
-            ],
-            borderColor: [
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)'
-            ],
-            borderWidth: 1
-        }]
-    }
-});
-
-// Set Three - BAR
-<?php 
-$query = "SELECT * FROM `cs_banks_primary` WHERE `steam_id` != 'STEAM_0:1:25306470' ORDER BY `minutes` DESC LIMIT 10";
-$sql = mysqli_query($csdb_link, $query);
-$minutes= array();
-$names= array();
-while($r = mysqli_fetch_assoc($sql)) {
-    $minutes[] = $r['minutes'];
-    $names[] = $r['name'];
-}
-?>
-var ctx = document.getElementById('Chart3-bar').getContext('2d');
-var myChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: <?php print json_encode($names); ?>,
-        datasets: [{
-            label: 'Playtime',
-            data: <?php print json_encode($minutes); ?>,
-            backgroundColor: [
-                'rgba(255, 102, 102, 0.5)',
-                'rgba(255, 140, 102, 0.5)',
-                'rgba(255, 179, 102, 0.5)',
-                'rgba(255, 217, 102, 0.5)',
-                'rgba(255, 255, 102, 0.5)',
-                'rgba(217, 255, 102, 0.5)',
-                'rgba(179, 255, 102, 0.5)',
-                'rgba(140, 255, 102, 0.5)',
-                'rgba(102, 255, 102, 0.5)',
-                'rgba(102, 255, 140, 0.5)'
-            ],
-            borderColor: [
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)'
-            ],
-            borderWidth: 1
-        }]
-    }
-});
-
-// Set Three - PIE
-var ctx = document.getElementById('Chart3-pie').getContext('2d');
-var myChart = new Chart(ctx, {
-    type: 'pie',
-    data: {
-        labels: <?php print json_encode($names); ?>,
-        datasets: [{
-            label: 'Playtime',
-            data: <?php print json_encode($minutes); ?>,
-            backgroundColor: [
-                'rgba(255, 102, 102, 0.5)',
-                'rgba(255, 140, 102, 0.5)',
-                'rgba(255, 179, 102, 0.5)',
-                'rgba(255, 217, 102, 0.5)',
-                'rgba(255, 255, 102, 0.5)',
-                'rgba(217, 255, 102, 0.5)',
-                'rgba(179, 255, 102, 0.5)',
-                'rgba(140, 255, 102, 0.5)',
-                'rgba(102, 255, 102, 0.5)',
-                'rgba(102, 255, 140, 0.5)'
-            ],
-            borderColor: [
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)'
-            ],
-            borderWidth: 1
-        }]
-    }
-});
-
-// Set Four - BAR
-<?php 
-$query = "SELECT * FROM `cs_elo_primary` ORDER BY `elo` DESC LIMIT 10";
-$sql = mysqli_query($csdb_link, $query);
-$elo= array();
-$names= array();
-while($r = mysqli_fetch_assoc($sql)) {
-    $elo[] = $r['elo'];
-    $names[] = $r['name'];
-}
-?>
-var ctx = document.getElementById('Chart4-bar').getContext('2d');
-var myChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: <?php print json_encode($names); ?>,
-        datasets: [{
-            label: 'Combat',
-            data: <?php print json_encode($elo); ?>,
-            backgroundColor: [
-                'rgba(255, 102, 102, 0.5)',
-                'rgba(255, 140, 102, 0.5)',
-                'rgba(255, 179, 102, 0.5)',
-                'rgba(255, 217, 102, 0.5)',
-                'rgba(255, 255, 102, 0.5)',
-                'rgba(217, 255, 102, 0.5)',
-                'rgba(179, 255, 102, 0.5)',
-                'rgba(140, 255, 102, 0.5)',
-                'rgba(102, 255, 102, 0.5)',
-                'rgba(102, 255, 140, 0.5)'
-            ],
-            borderColor: [
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)'
-            ],
-            borderWidth: 1
-        }]
-    }
-});
-
-//Set Four - PIE
-var ctx = document.getElementById('Chart4-pie').getContext('2d');
-var myChart = new Chart(ctx, {
-    type: 'pie',
-    data: {
-        labels: <?php print json_encode($names); ?>,
-        datasets: [{
-            label: 'Combat',
-            data: <?php print json_encode($elo); ?>,
-            backgroundColor: [
-                'rgba(255, 102, 102, 0.5)',
-                'rgba(255, 140, 102, 0.5)',
-                'rgba(255, 179, 102, 0.5)',
-                'rgba(255, 217, 102, 0.5)',
-                'rgba(255, 255, 102, 0.5)',
-                'rgba(217, 255, 102, 0.5)',
-                'rgba(179, 255, 102, 0.5)',
-                'rgba(140, 255, 102, 0.5)',
-                'rgba(102, 255, 102, 0.5)',
-                'rgba(102, 255, 140, 0.5)'
-            ],
-            borderColor: [
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)',
-                'rgba(50, 50, 50, 0.2)'
-            ],
-            borderWidth: 1
-        }]
-    }
-});
 </script>
+
+ <!-- Js. -->
+<script src="./vendor/chartjs/Chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<?php 
+//GRAPHINC
+// Handling of the inserting / js creation of the various graphs. Pie + Bar in one file.
+include('./graphs/chr_gbank.php');
+include('./graphs/chr_bank.php'); 
+include('./graphs/chr_pla.php'); 
+include('./graphs/chr_com.php'); 
+?>
 
   </body>
 </html>
