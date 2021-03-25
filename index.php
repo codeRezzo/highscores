@@ -20,7 +20,7 @@
 //Connect
 include('connect.php');
 
-// Primary Ladders
+//Primary Ladders
 include('./ladders/ldr_pla.php');
 include('./ladders/ldr_eco.php');
 include('./ladders/ldr_com.php');
@@ -31,93 +31,15 @@ include('./ladders/ldr_due.php');
 // blacklist
 $banned_users = array("STEAM_0:1:25306470", "x");
 
-//Playtime
-$q_pla = "SELECT * FROM `cs_banks_primary` ORDER BY `cs_banks_primary`.`minutes` DESC;";
-$qret_pla = mysqli_query($csdb_link, $q_pla);
-
-while($pla_row = mysqli_fetch_array($qret_pla)){
-  $pn = $pla_row['steam_id'];
-  if(!in_array($pn, $banned_users)){
-  $pt=$pla_row['minutes'];
-  $d=0;$h=0;$m=0;
-    if($pt <= 60){
-      $m = $pt;
-    }elseif($pt < 1440){
-      $h=$pt/60;
-      $m=$pt%60; 
-    }elseif($pt >= 1440){
-      $d=$pt/1440;
-      $d_r=$pt%1440;
-      $h=$d_r/60;
-      $m=$d_r%60;
-    }
-  }
-  $d=number_format($d,0); 
-  $h=number_format($h,0);
-  $m=number_format($m,0);
-
-  $pla_topname = $pla_row['name'];
-  break;
-}
-//reset locaion in array.
-mysqli_data_seek( $qret_pla, 0 );
-
-//Economy
-$q_eco =   "SELECT cs_banks_primary.steam_id, cs_banks_primary.cash, cs_banks_primary.bank, cs_banks_primary.income, cs_banks_secondary.cash, cs_banks_secondary.bank,cs_banks_secondary.income, cs_banks_primary.name FROM cs_banks_primary INNER JOIN cs_banks_secondary ON cs_banks_primary.steam_id=cs_banks_secondary.steam_id ORDER BY cs_banks_primary.bank DESC LIMIT 25";
-$qret_eco = mysqli_query($csdb_link, $q_eco);
-
-while($eco_row = mysqli_fetch_array($qret_eco)){ 
-  $eco_topname = $eco_row['name'];
-  $eco_topbank =number_format( $eco_row['bank']); 
-  break; 
-}
-//reset locaion in array.
-mysqli_data_seek($qret_eco, 0 );
-
-//Combat
-$q_com = "SELECT cs_elo_primary.steam_id, cs_elo_primary.elo, cs_elo_primary.kills, cs_elo_primary.deaths, cs_elo_secondary.elo, cs_elo_secondary.kills,cs_elo_secondary.deaths, cs_elo_primary.name FROM cs_elo_primary INNER JOIN cs_elo_secondary ON cs_elo_primary.steam_id=cs_elo_secondary.steam_id ORDER BY cs_elo_primary.elo DESC LIMIT 25";
-$qret_com = mysqli_query($csdb_link, $q_com);
-  
-while($com_row = mysqli_fetch_array($qret_com)){ 
-  $com_topname = $com_row['name']; 
-  $com_topelo = number_format($com_row['1'],0); //targets the first elo column. (this is the primary elo table <latest snapshot>)
-  break; 
-}
-mysqli_data_seek( $qret_com, 0 );
-
-//Respect
-$q_res = "SELECT * FROM `cs_expresp_ladder` WHERE `respect` < '500000' ORDER BY `respect` DESC LIMIT 25";
-$qret_res = mysqli_query($csdb_link, $q_res);
-
-while($res_row = mysqli_fetch_array($qret_res)){ 
-  $res_topname = $res_row['name']; 
-  $res_toppoints = number_format($res_row['respect'],0); 
-  break; 
-}
-mysqli_data_seek( $qret_res, 0 );
+//Primary Queries
+include('./queries/qry_pla.php');
+include('./queries/qry_eco.php');
+include('./queries/qry_com.php');
+include('./queries/qry_res.php');
+include('./queries/qry_exp.php');
+include('./queries/qry_due.php');
 
 
-//Experience
-$q_exp = "SELECT * FROM `cs_expresp_ladder` WHERE `experience` < '500000' ORDER BY `experience` DESC LIMIT 25";
-$qret_exp = mysqli_query($csdb_link, $q_exp);
-
-while($exp_row = mysqli_fetch_array($qret_exp)){ 
-  $exp_topname = $exp_row['name']; 
-  $exp_toppoints = number_format($exp_row['experience'],0); 
-  break; 
-}
-mysqli_data_seek( $qret_exp, 0 );
-
-//Dueling
-$q_due = "SELECT bluerp_players.steam_id, bluerp_players.username, bluerp_dmstats.wins, bluerp_dmstats.losses, bluerp_dmstats.total_dms, bluerp_dmstats.kills, bluerp_dmstats.deaths FROM bluerp_players INNER JOIN bluerp_dmstats ON bluerp_players.steam_id=bluerp_dmstats.steam_id ORDER BY bluerp_dmstats.wins DESC LIMIT 25";
-$qret_due = mysqli_query($cold_link, $q_due);
-
-while($due_row = mysqli_fetch_array($qret_due)){ 
-  $due_topname = $due_row['username']; 
-  $due_topwins = number_format($due_row['wins'],0); 
-  break; 
-}
-mysqli_data_seek( $qret_due, 0 );
 ?>
 
   <div class="container">
@@ -648,8 +570,8 @@ $('#godueling').click(function(e){
 
  </script>
   <script src="./vendor/chartjs/Chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
 
 <script>
