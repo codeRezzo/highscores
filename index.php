@@ -444,22 +444,29 @@ include('./queries/qry_lku_populatelist.php');
               <ul class="list-unstyled">
                 <h3 class="text-center">Player Lookup</h3>
                 <li class="float-lg-left" id="gohome-playerlookup">Go Back</li>
-                <li class="float-lg-right">PG1</li>
+                <li class="float-lg-right">Beta 1.6a</li>
               </ul>
               <br>
 
               <div class="row">
                 <div class="col-sm">
-                  <div class="form-group">
-                    <label for="Sel1">To Qualify for the tool:</label>
-                    <label for="Sel1">- Have a registered  player name.</label>
-                    <label for="Sel1">- More than 10 hours playtime.</label>
-                    <select class="form-control" id="Sel1" name="users" onchange="showUser(this.value)">
-                        <?php qry_lku_populatelist(); ?>
-                    </select>
-                  </div>
 
+                  <div class="form-group">
+                    <label for="Sel1">To Qualify for the tool:</label><br>
+                    <label for="Sel1">- Have a registered  player name.</label><br>
+                    <label for="Sel1">- More than 10 hours playtime.</label><br>
+                    <input type="text" class="form-control" placeholder="Filter by Name" id="FilterList">
+                    <div class="input-group mb-3">
+                      <select class="form-control" id="Sel1" name="users" onchange="showUser(this.value)">
+                          <?php qry_lku_populatelist(); ?>
+                      </select>
+                      <div class="input-group-append">
+                         <span class="btn btn-info" onclick='showUser(Sel1.value)'>Search</span>
+                      </div>
+                  </div>
                 </div>
+              </div>
+
                 <div class="col-sm">
                   <div id="lookupcontents">
                     <ul class="list-group">
@@ -627,6 +634,7 @@ $('#godueling').click(function(e){
 <script src="./vendor/chartjs/Chart.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="./vendor/chosen/chosen.jquery.js" type="text/javascript"></script>
 
 <?php 
 //GRAPHINC
@@ -654,6 +662,31 @@ function showUser(str) {
     xmlhttp.send();
   }
 }
+
+$(document).ready(function(){
+var $this, i, filter,
+    $input = $('#FilterList'),
+    $options = $('#Sel1').find('option');
+
+$input.keyup(function(){
+    filter = $(this).val();
+    i = 1;
+    $options.each(function(){
+        $this = $(this);
+        $this.removeAttr('selected');
+        if ($this.text().indexOf(filter) != -1) {
+            $this.show();
+            if(i == 1){
+                $this.attr('selected', 'selected');
+            }
+            i++;
+        } else {
+            $this.hide();
+          }
+    });
+});
+
+});
 </script>
 
   </body>
