@@ -2,7 +2,7 @@
 function qry_lku_populatelist(){
     include('././connect.php');
     //PlayerList
-    $q_pop =  "SELECT * FROM `bluerp_players` WHERE `minutes` > 600 ORDER BY  `username` DESC";
+    $q_pop =  "SELECT * FROM `bluerp_players` WHERE `minutes` > 300 ORDER BY  `username` ASC";
     $qret_pop = mysqli_query($cold_link, $q_pop);
     $i=0;
     echo '<option value="">Select a Player</option>';
@@ -12,7 +12,7 @@ function qry_lku_populatelist(){
     }else{
     $i++;
     $u=strval($pop_row['username']);
-    echo "<option value='".$pop_row['steam_id']."'>". $i ." - ".$u."</option>\n"; 
+    echo "<option value='".$pop_row['steam_id']."'>" . $i . " - " . $u . " - " . $pop_row['steam_id'] . "</option>\n"; 
     }
     }
 }

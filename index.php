@@ -453,8 +453,8 @@ include('./queries/qry_lku_populatelist.php');
 
                   <div class="form-group">
                     <label for="Sel1">To Qualify for the tool:</label><br>
-                    <label for="Sel1">- Have a registered  player name.</label><br>
-                    <label for="Sel1">- More than 10 hours playtime.</label><br>
+                    <label for="Sel1">- Have a registered player name.</label><br>
+                    <label for="Sel1">- More than 5 hours playtime.</label><br>
                     <input type="text" class="form-control" placeholder="Filter by Name" id="FilterList">
                     <div class="input-group mb-3">
                       <select class="form-control" id="Sel1" name="users" onchange="showUser(this.value)">
