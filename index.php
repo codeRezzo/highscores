@@ -28,8 +28,14 @@ include('./ladders/ldr_res.php');
 include('./ladders/ldr_exp.php');
 include('./ladders/ldr_due.php');
 
-// blacklist
+//Gang Ladders
+include('./ladders/ldr_geco.php');
+include('./ladders/ldr_gres.php');
+include('./ladders/ldr_gexp.php');
+
+// blacklists
 $banned_users = array("STEAM_0:1:25306470", "x");
+$banned_gangs = array("default_banned_gang-22-3", "default_banned_gang-22-2");
 
 //Primary Queries
 include('./queries/qry_pla.php');
@@ -38,6 +44,11 @@ include('./queries/qry_com.php');
 include('./queries/qry_res.php');
 include('./queries/qry_exp.php');
 include('./queries/qry_due.php');
+
+//Gang Queries
+include('./queries/qry_geco.php');
+include('./queries/qry_gres.php');
+include('./queries/qry_gexp.php');
 
 //Graph queries (actual graph creation includes are at the bottom of the page ctrl+f tag: GRAPHINC)
 include('./queries/qry_grp_gbank.php');
@@ -57,7 +68,7 @@ include('./queries/qry_lku_populatelist.php');
         <h3 class="text-center">Select a Section</h3> 
           <div class="row">
             <div class="col-sm">
-              <div class="card border-success mb-3">
+              <div class="card border-primary mb-3">
                 <div class="card-body" id="goladders">
                   <h4 class="card-title">Ladders</h4>
                   <p class="card-text">Standard highscore leaderboards.</p>
@@ -65,7 +76,7 @@ include('./queries/qry_lku_populatelist.php');
               </div>
             </div>
             <div class="col-sm">
-              <div class="card border-success mb-3">
+              <div class="card border-primary mb-3">
                 <div class="card-body" id="govisualscores">
                   <h4 class="card-title">Visual Scores</h4>
                   <p class="card-text">Ladders, but in graph form.</p>
@@ -73,14 +84,29 @@ include('./queries/qry_lku_populatelist.php');
               </div>
             </div>
             <div class="col-sm">
-              <div class="card border-success mb-3">
+              <div class="card border-primary mb-3">
                 <div class="card-body" id="goplayerlookup">
                   <h4 class="card-title">Player Look Up</h4>
                   <p class="card-text">Look up information on a specific player.</p>
                 </div>
               </div>
             </div>
-        </div>
+          </div>
+          <div class="row">
+            <div class="col-sm">
+              <div class="card border-danger mb-3">
+                <div class="card-body" >
+                  <h4 class="card-title">Server Stats</h4>
+                  <p class="card-text">Bits of information about the game server.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+          </div>
+
       </div>
     </div>
 
@@ -91,7 +117,7 @@ include('./queries/qry_lku_populatelist.php');
                 <li class="float-lg-left" id="gohome">Go Back</li>
               </ul>
             <br>
-            <div class="card border-success mb-3">
+            <div class="card border-primary mb-3">
               <div class="row">
                 <div class="col-sm">
                     <div class="card-body" id="goplaytime">
@@ -136,24 +162,24 @@ include('./queries/qry_lku_populatelist.php');
             </div>
 
             <h3 class="text-center">Gang Ladders</h3> 
-              <div class="card border-danger mb-3">
+              <div class="card border-primary mb-3">
                 <div class="row">
                   <div class="col-sm">
-                      <div class="card-body">
+                      <div class="card-body" id="gogangeconomy">
                         <h4 class="card-title">Economy Ladder</h4>
-                        <p class="card-text">$GID is rank #1 with a combined total of $cash banked.</p>
+                        <p class="card-text"><?php echo $geco_topgang . " is rank #1 with a combined total of $". $geco_topbank . " banked." ?></p>
                       </div>
                   </div>
                   <div class="col-sm">
-                      <div class="card-body">
+                      <div class="card-body" id="gogangrespect">
                         <h4 class="card-title">Respect Ladder</h4>
-                        <p class="card-text">$GID is rank #1 with a combined total of $respect rebel respect points.</p>
+                        <p class="card-text"><?php echo $gres_topgang . " is rank #1 with a combined total of ". $gres_toprespect . " respect points." ?></p>
                       </div>
                   </div>
                   <div class="col-sm">
-                      <div class="card-body">
+                      <div class="card-body" id="gogangexperience">
                         <h4 class="card-title">Experience Ladder</h4>
-                        <p class="card-text">$GID is rank #1 with a combined total of $experience cop experience points.</p>
+                        <p class="card-text"><?php echo $gexp_topgang . " is rank #1 with a combined total of ". $gexp_topexperience . " experience points." ?></p>
                       </div>
                   </div>
                 </div>
@@ -354,6 +380,76 @@ include('./queries/qry_lku_populatelist.php');
                 </thead>
                 <tbody>
                 <?php tbl_due($qret_due, $banned_users); ?>
+                </tbody>
+              </table>
+          </div>   
+        </div>
+
+        <div class="jumbotron shadow p-3 mb-5 bg-white rounded" id="gangeconomy" style="display:none;">
+          <div class="container">
+              <ul class="list-unstyled">
+                <h3 class="text-center">Gang Economy Ladder</h3>
+                <li class="float-lg-left" id="gobackladders-geco">Go Back</li>
+                <li class="float-lg-right">Displaying Rows 0-25</li>
+              </ul>
+
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">Rank</th>
+                    <th scope="col">Gang</th>
+                    <th scope="col">Money</th>
+                    <th scope="col">Bank</th>
+                  </tr>
+                </thead>
+                <tbody>
+                <?php tbl_geco($qret_geco, $banned_gangs); ?>
+                </tbody>
+              </table>
+          </div>   
+        </div>
+
+        <div class="jumbotron shadow p-3 mb-5 bg-white rounded" id="gangrespect" style="display:none;">
+          <div class="container">
+              <ul class="list-unstyled">
+                <h3 class="text-center">Gang Respect Ladder</h3>
+                <li class="float-lg-left" id="gobackladders-gres">Go Back</li>
+                <li class="float-lg-right">Displaying Rows 0-25</li>
+              </ul>
+
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">Rank</th>
+                    <th scope="col">Gang</th>
+                    <th scope="col">Respect</th>
+                  </tr>
+                </thead>
+                <tbody>
+                <?php tbl_gres($qret_gres, $banned_gangs); ?>
+                </tbody>
+              </table>
+          </div>   
+        </div>
+
+        <div class="jumbotron shadow p-3 mb-5 bg-white rounded" id="gangexperience" style="display:none;">
+          <div class="container">
+              <ul class="list-unstyled">
+                <h3 class="text-center">Gang Experience Ladder</h3>
+                <li class="float-lg-left" id="gobackladders-gexp">Go Back</li>
+                <li class="float-lg-right">Displaying Rows 0-25</li>
+              </ul>
+
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">Rank</th>
+                    <th scope="col">Gang</th>
+                    <th scope="col">Experience</th>
+                  </tr>
+                </thead>
+                <tbody>
+                <?php tbl_gexp($qret_gexp, $banned_gangs); ?>
                 </tbody>
               </table>
           </div>   
@@ -594,6 +690,23 @@ $('#gobackladders-due').click(function(e){
         $('#ladders').fadeIn('slow');
     });
 });
+//Row 3
+$('#gobackladders-geco').click(function(e){    
+    $("#gangeconomy").fadeOut('slow', function(){
+        $('#ladders').fadeIn('slow');
+    });
+});
+$('#gobackladders-gexp').click(function(e){    
+    $("#gangexperience").fadeOut('slow', function(){
+        $('#ladders').fadeIn('slow');
+    });
+});
+$('#gobackladders-gres').click(function(e){    
+    $("#gangrespect").fadeOut('slow', function(){
+        $('#ladders').fadeIn('slow');
+    });
+});
+
 // Handle opening of the ladders.
 //Row 1
 $('#goplaytime').click(function(e){    
@@ -606,7 +719,6 @@ $('#goeconomy').click(function(e){
         $('#economy').fadeIn('slow');
     });
 });
-// Open Ladder combat
 $('#gocombat').click(function(e){    
     $('#ladders').fadeOut('slow', function(){
         $('#combat').fadeIn('slow');
@@ -628,6 +740,24 @@ $('#godueling').click(function(e){
         $('#dueling').fadeIn('slow');
     });
 });
+//Row 3
+$('#gogangeconomy').click(function(e){    
+    $('#ladders').fadeOut('slow', function(){
+        $('#gangeconomy').fadeIn('slow');
+    });
+});
+$('#gogangexperience').click(function(e){    
+    $('#ladders').fadeOut('slow', function(){
+        $('#gangexperience').fadeIn('slow');
+    });
+});
+$('#gogangrespect').click(function(e){    
+    $('#ladders').fadeOut('slow', function(){
+        $('#gangrespect').fadeIn('slow');
+    });
+});
+
+
 </script>
 
  <!-- Js. -->
