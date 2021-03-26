@@ -45,6 +45,9 @@ include('./queries/qry_grp_bank.php');
 include('./queries/qry_grp_pla.php');
 include('./queries/qry_grp_com.php');
 
+//AJAX Player Lookup.
+include('./queries/qry_lku_populatelist.php');
+
 ?>
 
   <div class="container">
@@ -70,7 +73,7 @@ include('./queries/qry_grp_com.php');
               </div>
             </div>
             <div class="col-sm">
-              <div class="card border-danger mb-3">
+              <div class="card border-success mb-3">
                 <div class="card-body" id="goplayerlookup">
                   <h4 class="card-title">Player Look Up</h4>
                   <p class="card-text">Look up information on a specific player.</p>
@@ -436,6 +439,38 @@ include('./queries/qry_grp_com.php');
           </div>   
         </div>
 
+        <div class="jumbotron shadow p-3 mb-5 bg-white rounded" id="playerlookup" style="display:none;">
+          <div class="container">
+              <ul class="list-unstyled">
+                <h3 class="text-center">Player Lookup</h3>
+                <li class="float-lg-left" id="gohome-playerlookup">Go Back</li>
+                <li class="float-lg-right">PG1</li>
+              </ul>
+              <br>
+
+              <div class="row">
+                <div class="col-sm">
+                  <div class="form-group">
+                    <label for="Sel1">To Qualify for the tool:</label>
+                    <label for="Sel1">- Have a registered  player name.</label>
+                    <label for="Sel1">- More than 10 hours playtime.</label>
+                    <select class="form-control" id="Sel1" name="users" onchange="showUser(this.value)">
+                        <?php qry_lku_populatelist(); ?>
+                    </select>
+                  </div>
+
+                </div>
+                <div class="col-sm">
+                  <div id="lookupcontents">
+                    <ul class="list-group">
+                      <li class="list-group-item d-flex justify-content-between align-items-center">Please Select a Player</li>
+                    </ul>
+                  </div>
+                </div>
+
+              </div>
+          </div>   
+        </div>
 
         <div class="row">
           <div class="col-lg-12">
@@ -445,6 +480,7 @@ include('./queries/qry_grp_com.php');
             </ul>
           </div>
         </div>
+
   </div>
 
   <script>
@@ -501,6 +537,19 @@ $('#gohome-vissco-pie').click(function(e){
     });
 });
 
+//Open the player lookup panel
+$('#goplayerlookup').click(function(e){
+    $('#home').fadeOut('slow', function(){
+        $('#playerlookup').fadeIn('slow');
+    });
+});
+
+// Close Player lookup and go back to home selection screen.
+$('#gohome-playerlookup').click(function(e){
+    $('#playerlookup').fadeOut('slow', function(){
+        $('#home').fadeIn('slow');
+    });
+});
 
 // Handle going back.. for some reason each ladder needed its own function.
 // Close the ladder and return to ladder selection.
@@ -581,12 +630,31 @@ $('#godueling').click(function(e){
 
 <?php 
 //GRAPHINC
-// Handling of the inserting / js creation of the various graphs. Pie + Bar in one file.
+//Handling of the inserting / js creation of the various graphs. Pie + Bar in one file.
 include('./graphs/chr_gbank.php');
 include('./graphs/chr_bank.php'); 
 include('./graphs/chr_pla.php'); 
 include('./graphs/chr_com.php'); 
 ?>
+
+
+<script>
+function showUser(str) {
+  if (str == "") {
+    document.getElementById("lookupcontents").innerHTML = "";
+    return;
+  } else {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        document.getElementById("lookupcontents").innerHTML = this.responseText;
+      }
+    };
+    xmlhttp.open("GET","./queries/qry_ajx_lookup.php?q="+str,true);
+    xmlhttp.send();
+  }
+}
+</script>
 
   </body>
 </html>
