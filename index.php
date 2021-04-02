@@ -547,7 +547,7 @@ include('./queries/qry_lku_ganglist.php');
               <ul class="list-unstyled">
                 <h3 class="text-center">Player Look Up</h3>
                 <li class="float-lg-left" id="gohome-playerlookup">Go Back</li>
-                <li class="float-lg-right">Beta 1.6a</li>
+                <li class="float-lg-right">Beta 1.6.1</li>
               </ul>
               <br>
 
