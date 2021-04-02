@@ -33,9 +33,10 @@ include('./ladders/ldr_geco.php');
 include('./ladders/ldr_gres.php');
 include('./ladders/ldr_gexp.php');
 
+
 // blacklists
-$banned_users = array("STEAM_0:1:25306470", "x");
-$banned_gangs = array("default_banned_gang-22-3", "default_banned_gang-22-2");
+$banned_users = array("STEAM_0:1:25306470", "x"); //Player SteamID32
+$banned_gangs = array("default_banned_gang-22-3", "default_banned_gang-22-2"); //Gang ID64
 
 //Primary Queries
 include('./queries/qry_pla.php');
@@ -56,9 +57,9 @@ include('./queries/qry_grp_bank.php');
 include('./queries/qry_grp_pla.php');
 include('./queries/qry_grp_com.php');
 
-//AJAX Player Lookup.
-include('./queries/qry_lku_populatelist.php');
-
+//AJAX Lookup.
+include('./queries/qry_lku_plalist.php');
+include('./queries/qry_lku_ganglist.php');
 ?>
 
   <div class="container">
@@ -104,6 +105,12 @@ include('./queries/qry_lku_populatelist.php');
             <div class="col-sm">
             </div>
             <div class="col-sm">
+              <div class="card border-primary mb-3">
+                <div class="card-body" id="goganglookup">
+                  <h4 class="card-title">Gang Look Up</h4>
+                  <p class="card-text">Look up information on a specific Gang.</p>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -538,7 +545,7 @@ include('./queries/qry_lku_populatelist.php');
         <div class="jumbotron shadow p-3 mb-5 bg-white rounded" id="playerlookup" style="display:none;">
           <div class="container">
               <ul class="list-unstyled">
-                <h3 class="text-center">Player Lookup</h3>
+                <h3 class="text-center">Player Look Up</h3>
                 <li class="float-lg-left" id="gohome-playerlookup">Go Back</li>
                 <li class="float-lg-right">Beta 1.6a</li>
               </ul>
@@ -551,10 +558,10 @@ include('./queries/qry_lku_populatelist.php');
                     <label for="Sel1">To Qualify for the tool:</label><br>
                     <label for="Sel1">- Have a registered player name.</label><br>
                     <label for="Sel1">- More than 5 hours playtime.</label><br>
-                    <input type="text" class="form-control" placeholder="Filter by Name" id="FilterList">
+                    <input type="text" class="form-control" placeholder="Filter by Name" id="FilterListPlayers">
                     <div class="input-group mb-3">
                       <select class="form-control" id="Sel1" name="users" onchange="showUser(this.value)">
-                          <?php qry_lku_populatelist(); ?>
+                          <?php qry_lku_plalist(); ?>
                       </select>
                       <div class="input-group-append">
                          <span class="btn btn-info" onclick='showUser(Sel1.value)'>Search</span>
@@ -564,9 +571,48 @@ include('./queries/qry_lku_populatelist.php');
               </div>
 
                 <div class="col-sm">
-                  <div id="lookupcontents">
+                  <div id="pla-lookup-contents">
                     <ul class="list-group">
                       <li class="list-group-item d-flex justify-content-between align-items-center">Please Select a Player</li>
+                    </ul>
+                  </div>
+                </div>
+
+              </div>
+          </div>   
+        </div>
+
+        <div class="jumbotron shadow p-3 mb-5 bg-white rounded" id="ganglookup" style="display:none;">
+          <div class="container">
+              <ul class="list-unstyled">
+                <h3 class="text-center">Gang Look Up</h3>
+                <li class="float-lg-left" id="gohome-ganglookup">Go Back</li>
+                <li class="float-lg-right">Beta 1.1</li>
+              </ul>
+              <br>
+
+              <div class="row">
+                <div class="col-sm">
+
+                  <div class="form-group">
+                    <label for="Sel2">To Qualify for the tool:</label><br>
+                    <label for="Sel2">- No requirements at this time.</label><br>
+                    <!--<input type="text" class="form-control" placeholder="Filter by Name" id="FilterListGangs">--> <!-- Not needed at this time, may add in the future. -->
+                    <div class="input-group mb-3">
+                      <select class="form-control" id="Sel2" name="gangs" onchange="showGang(this.value)">
+                          <?php qry_lku_ganglist(); ?>
+                      </select>
+                      <div class="input-group-append">
+                         <span class="btn btn-info" onclick='showGang(Sel2.value)'>Search</span>
+                      </div>
+                  </div>
+                </div>
+              </div>
+
+                <div class="col-sm">
+                  <div id="gang-lookup-contents">
+                    <ul class="list-group">
+                      <li class="list-group-item d-flex justify-content-between align-items-center">Please Select a Gang</li>
                     </ul>
                   </div>
                 </div>
@@ -650,6 +696,20 @@ $('#goplayerlookup').click(function(e){
 // Close Player lookup and go back to home selection screen.
 $('#gohome-playerlookup').click(function(e){
     $('#playerlookup').fadeOut('slow', function(){
+        $('#home').fadeIn('slow');
+    });
+});
+
+//Open the Gang lookup panel
+$('#goganglookup').click(function(e){
+    $('#home').fadeOut('slow', function(){
+        $('#ganglookup').fadeIn('slow');
+    });
+});
+
+// Close Gang lookup and go back to home selection screen.
+$('#gohome-ganglookup').click(function(e){
+    $('#ganglookup').fadeOut('slow', function(){
         $('#home').fadeIn('slow');
     });
 });
@@ -777,25 +837,28 @@ include('./graphs/chr_com.php');
 
 
 <script>
+
+//Handling Player lookup AJAX request
 function showUser(str) {
   if (str == "") {
-    document.getElementById("lookupcontents").innerHTML = "";
+    document.getElementById("pla-lookup-contents").innerHTML = "";
     return;
   } else {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
-        document.getElementById("lookupcontents").innerHTML = this.responseText;
+        document.getElementById("pla-lookup-contents").innerHTML = this.responseText;
       }
     };
-    xmlhttp.open("GET","./queries/qry_ajx_lookup.php?q="+str,true);
+    xmlhttp.open("GET","./queries/qry_ajx_plalookup.php?q="+str,true);
     xmlhttp.send();
   }
 }
 
+// Filtering the player list because there are just soo many users to look through.
 $(document).ready(function(){
 var $this, i, filter,
-    $input = $('#FilterList'),
+    $input = $('#FilterListPlayers'),
     $options = $('#Sel1').find('option');
 
 $input.keyup(function(){
@@ -817,6 +880,24 @@ $input.keyup(function(){
 });
 
 });
+
+
+//Handling Gang lookup AJAX request
+function showGang(str) {
+  if (str == "") {
+    document.getElementById("gang-lookup-contents").innerHTML = "";
+    return;
+  } else {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        document.getElementById("gang-lookup-contents").innerHTML = this.responseText;
+      }
+    };
+    xmlhttp.open("GET","./queries/qry_ajx_ganglookup.php?q="+str,true);
+    xmlhttp.send();
+  }
+}
 </script>
 
   </body>

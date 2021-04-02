@@ -42,7 +42,7 @@ var ctx = document.getElementById('chr-gbank-pie').getContext('2d');
 var myChart = new Chart(ctx, {
     type: 'pie',
     data: {
-        labels: <?php print json_encode($gbank_pie_bank); ?>,
+        labels: <?php print json_encode($gbank_pie_name); ?>,
         datasets: [{
             label: 'Gang Bank',
             data: <?php print json_encode($gbank_pie_bank); ?>,
