@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Home</title>
+    <title>Highscores</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
      <link rel="stylesheet" href="./vendor/bootstrap/css/bootstrap.min.css">
@@ -12,15 +12,18 @@
 
 </head>
 <html>
-  <body style="min-height: 100vh; background: rgb(255,255,255);
-  background: linear-gradient(210deg, rgba(255,255,255,1) 0%, rgba(190,190,190,1) 51%, rgba(255,255,255,1) 100%);">
+  <style>::-webkit-scrollbar { display: none;}</style>
+  <body style="min-height: 100vh; background: rgb(23, 23, 23);
+  background: linear-gradient(210deg, rgba(23, 23, 23,1) 0%, rgba(50, , 23,1) 51%, rgba(23, 23, 23,1) 100%);">
+
+
 
 
 <?php 
 //Connect
 include('connect.php');
 
-//Primary Ladders
+//white Ladders
 include('./ladders/ldr_pla.php');
 include('./ladders/ldr_eco.php');
 include('./ladders/ldr_com.php');
@@ -38,7 +41,7 @@ include('./ladders/ldr_gexp.php');
 $banned_users = array("STEAM_0:1:25306470", "x"); //Player SteamID32
 $banned_gangs = array("default_banned_gang-22-3", "default_banned_gang-22-2"); //Gang ID64
 
-//Primary Queries
+//whiite Queries
 include('./queries/qry_pla.php');
 include('./queries/qry_eco.php');
 include('./queries/qry_com.php');
@@ -64,12 +67,16 @@ include('./queries/qry_lku_ganglist.php');
 
   <div class="container">
     <h1 class="display-2 text-center">Rezzo.Dev</h1>
-    <div class="jumbotron shadow p-3 mb-5 bg-white rounded" id="home">
+    <div class="jumbotron shadow p-3 mb-5 bg-dark rounded" id="home">
       <div class="container">
-        <h3 class="text-center">Select a Section</h3> 
+       <ul class="list-unstyled">
+        <h3 class="text-center">Highscores - Select a Section</h3> 
+        <li class="float-lg-left"><a class="text-whiite" href="https://rezzo.dev/">Go Back </a></li>
+      </ul>
+      <br>
           <div class="row">
             <div class="col-sm">
-              <div class="card border-primary mb-3">
+              <div class="card border-success mb-3">
                 <div class="card-body" id="goladders">
                   <h4 class="card-title">Ladders</h4>
                   <p class="card-text">Standard highscore leaderboards.</p>
@@ -77,7 +84,7 @@ include('./queries/qry_lku_ganglist.php');
               </div>
             </div>
             <div class="col-sm">
-              <div class="card border-primary mb-3">
+              <div class="card border-success mb-3">
                 <div class="card-body" id="govisualscores">
                   <h4 class="card-title">Visual Scores</h4>
                   <p class="card-text">Ladders, but in graph form.</p>
@@ -85,7 +92,7 @@ include('./queries/qry_lku_ganglist.php');
               </div>
             </div>
             <div class="col-sm">
-              <div class="card border-primary mb-3">
+              <div class="card border-success mb-3">
                 <div class="card-body" id="goplayerlookup">
                   <h4 class="card-title">Player Look Up</h4>
                   <p class="card-text">Look up information on a specific player.</p>
@@ -95,8 +102,8 @@ include('./queries/qry_lku_ganglist.php');
           </div>
           <div class="row">
             <div class="col-sm">
-              <div class="card border-danger mb-3">
-                <div class="card-body" >
+              <div class="card border-success mb-3">
+                <div class="card-body" id="goserverstats" >
                   <h4 class="card-title">Server Stats</h4>
                   <p class="card-text">Bits of information about the game server.</p>
                 </div>
@@ -105,7 +112,7 @@ include('./queries/qry_lku_ganglist.php');
             <div class="col-sm">
             </div>
             <div class="col-sm">
-              <div class="card border-primary mb-3">
+              <div class="card border-success mb-3">
                 <div class="card-body" id="goganglookup">
                   <h4 class="card-title">Gang Look Up</h4>
                   <p class="card-text">Look up information on a specific Gang.</p>
@@ -117,14 +124,14 @@ include('./queries/qry_lku_ganglist.php');
       </div>
     </div>
 
-        <div class="jumbotron shadow p-3 mb-5 bg-white rounded" id="ladders" style="display:none;">
+        <div class="jumbotron shadow p-3 mb-5 bg-dark rounded" id="ladders" style="display:none;">
           <div class="container">
               <ul class="list-unstyled">
                 <h3 class="text-center">Primary Ladders</h3>
                 <li class="float-lg-left" id="gohome">Go Back</li>
               </ul>
             <br>
-            <div class="card border-primary mb-3">
+            <div class="card border-success mb-3">
               <div class="row">
                 <div class="col-sm">
                     <div class="card-body" id="goplaytime">
@@ -169,7 +176,7 @@ include('./queries/qry_lku_ganglist.php');
             </div>
 
             <h3 class="text-center">Gang Ladders</h3> 
-              <div class="card border-primary mb-3">
+              <div class="card border-success mb-3">
                 <div class="row">
                   <div class="col-sm">
                       <div class="card-body" id="gogangeconomy">
@@ -248,7 +255,7 @@ include('./queries/qry_lku_ganglist.php');
           </div>   
         </div>
 
-        <div class="jumbotron shadow p-3 mb-5 bg-white rounded" id="playtime" style="display:none;">
+        <div class="jumbotron shadow p-3 mb-5 bg-dark rounded" id="playtime" style="display:none;">
           <div class="container">
               <ul class="list-unstyled">
                 <h3 class="text-center">Playtime Ladder</h3>
@@ -271,7 +278,7 @@ include('./queries/qry_lku_ganglist.php');
           </div>   
         </div>
       
-        <div class="jumbotron shadow p-3 mb-5 bg-white rounded" id="economy" style="display:none;">
+        <div class="jumbotron shadow p-3 mb-5 bg-dark rounded" id="economy" style="display:none;">
           <div class="container">
               <ul class="list-unstyled">
                 <h3 class="text-center">Economy Ladder</h3>
@@ -295,7 +302,7 @@ include('./queries/qry_lku_ganglist.php');
           </div>   
         </div>
 
-        <div class="jumbotron shadow p-3 mb-5 bg-white rounded" id="combat" style="display:none;">
+        <div class="jumbotron shadow p-3 mb-5 bg-dark rounded" id="combat" style="display:none;">
           <div class="container">
               <ul class="list-unstyled">
                 <h3 class="text-center">Combat Ladder</h3>
@@ -320,7 +327,7 @@ include('./queries/qry_lku_ganglist.php');
           </div>   
         </div>
 
-        <div class="jumbotron shadow p-3 mb-5 bg-white rounded" id="respect" style="display:none;">
+        <div class="jumbotron shadow p-3 mb-5 bg-dark rounded" id="respect" style="display:none;">
           <div class="container">
               <ul class="list-unstyled">
                 <h3 class="text-center">Respect Ladder</h3>
@@ -343,7 +350,7 @@ include('./queries/qry_lku_ganglist.php');
           </div>   
         </div>
 
-        <div class="jumbotron shadow p-3 mb-5 bg-white rounded" id="experience" style="display:none;">
+        <div class="jumbotron shadow p-3 mb-5 bg-dark rounded" id="experience" style="display:none;">
           <div class="container">
               <ul class="list-unstyled">
                 <h3 class="text-center">Experience Ladder</h3>
@@ -366,7 +373,7 @@ include('./queries/qry_lku_ganglist.php');
           </div>   
         </div>
 
-        <div class="jumbotron shadow p-3 mb-5 bg-white rounded" id="dueling" style="display:none;">
+        <div class="jumbotron shadow p-3 mb-5 bg-dark rounded" id="dueling" style="display:none;">
           <div class="container">
               <ul class="list-unstyled">
                 <h3 class="text-center">Dueling Ladder</h3>
@@ -392,7 +399,7 @@ include('./queries/qry_lku_ganglist.php');
           </div>   
         </div>
 
-        <div class="jumbotron shadow p-3 mb-5 bg-white rounded" id="gangeconomy" style="display:none;">
+        <div class="jumbotron shadow p-3 mb-5 bg-dark rounded" id="gangeconomy" style="display:none;">
           <div class="container">
               <ul class="list-unstyled">
                 <h3 class="text-center">Gang Economy Ladder</h3>
@@ -416,7 +423,7 @@ include('./queries/qry_lku_ganglist.php');
           </div>   
         </div>
 
-        <div class="jumbotron shadow p-3 mb-5 bg-white rounded" id="gangrespect" style="display:none;">
+        <div class="jumbotron shadow p-3 mb-5 bg-dark rounded" id="gangrespect" style="display:none;">
           <div class="container">
               <ul class="list-unstyled">
                 <h3 class="text-center">Gang Respect Ladder</h3>
@@ -439,7 +446,7 @@ include('./queries/qry_lku_ganglist.php');
           </div>   
         </div>
 
-        <div class="jumbotron shadow p-3 mb-5 bg-white rounded" id="gangexperience" style="display:none;">
+        <div class="jumbotron shadow p-3 mb-5 bg-dark rounded" id="gangexperience" style="display:none;">
           <div class="container">
               <ul class="list-unstyled">
                 <h3 class="text-center">Gang Experience Ladder</h3>
@@ -462,7 +469,7 @@ include('./queries/qry_lku_ganglist.php');
           </div>   
         </div>
 
-        <div class="jumbotron shadow p-3 mb-5 bg-white rounded" id="visualscores-bar" style="display:none;">
+        <div class="jumbotron shadow p-3 mb-5 bg-dark rounded" id="visualscores-bar" style="display:none;">
           <div class="container">
               <ul class="list-unstyled">
                 <h3 class="text-center">Visual Scores - BAR</h3>
@@ -502,7 +509,7 @@ include('./queries/qry_lku_ganglist.php');
           </div>   
         </div>
 
-        <div class="jumbotron shadow p-3 mb-5 bg-white rounded" id="visualscores-pie" style="display:none;">
+        <div class="jumbotron shadow p-3 mb-5 bg-dark rounded" id="visualscores-pie" style="display:none;">
           <div class="container">
               <ul class="list-unstyled">
                 <h3 class="text-center">Visual Scores - PIE</h3>
@@ -542,7 +549,7 @@ include('./queries/qry_lku_ganglist.php');
           </div>   
         </div>
 
-        <div class="jumbotron shadow p-3 mb-5 bg-white rounded" id="playerlookup" style="display:none;">
+        <div class="jumbotron shadow p-3 mb-5 bg-dark rounded" id="playerlookup" style="display:none;">
           <div class="container">
               <ul class="list-unstyled">
                 <h3 class="text-center">Player Look Up</h3>
@@ -582,7 +589,7 @@ include('./queries/qry_lku_ganglist.php');
           </div>   
         </div>
 
-        <div class="jumbotron shadow p-3 mb-5 bg-white rounded" id="ganglookup" style="display:none;">
+        <div class="jumbotron shadow p-3 mb-5 bg-dark rounded" id="ganglookup" style="display:none;">
           <div class="container">
               <ul class="list-unstyled">
                 <h3 class="text-center">Gang Look Up</h3>
@@ -621,11 +628,105 @@ include('./queries/qry_lku_ganglist.php');
           </div>   
         </div>
 
+
+        <div class="jumbotron shadow p-3 mb-5 bg-dark rounded" id="serverstats" style="display:none;">
+          <div class="container">
+              <ul class="list-unstyled">
+                <h3 class="text-center">Server Stats</h3>
+                <li class="float-lg-left" id="gohome-serverstats">Go Back</li>
+                <li class="float-lg-right">Last updated: Less than 1 minute ago.</li>
+              </ul>
+              <br>
+
+              <?php 
+
+              require 'SourceQuery.php';
+							$sq_server = new SourceQuery('104.153.105.245', 27019);
+							$sq_infos  = $sq_server->getInfos(); 
+							$sq_users  = $sq_server->getPlayers();
+							
+							?>
+
+              <div class="row">
+                <div class="col">
+                  <div class="progress">
+                    <?php 
+                    if($sq_infos['players'] == 0){
+                    $sq_perc=0;
+                    }else{
+                    $sq_x = $sq_infos['players'] / $sq_infos['places'] * 100;
+                    $sq_perc=number_format($sq_x,0);
+                    }
+                    ?>
+                    <div class="progress-bar bg-success" style="width: <?php echo $sq_perc; ?>%;" role="progressbar" aria-valuenow="<?php echo $sq_infos['players'] ?>" aria-valuemin="0" aria-valuemax="<?php echo $sq_infos['places'] ?>" data-toggle="tooltip" data-placement="bottom" title="Visual representation of occupied server slots."></div>
+                  </div>
+                </div>  
+              </div>
+              <br>
+              <br>
+              <div class="row">
+
+                <div class="col-sm">
+                  <div class="card border-secondary">
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item">Hostname:
+                        <?php echo $sq_infos['name']; ?>
+                      </li>
+                      <li class="list-group-item">Address:
+                        <?php echo $sq_infos['ip'] . ":" . $sq_infos['port']; ?> - <a href="steam://connect/104.153.105.245:27019"> Connect </a>
+                      </li>
+                      <li class="list-group-item">Users:
+                        <?php echo $sq_infos['players'] .'/'. $sq_infos['places']; ?>
+                      </li>
+                      <li class="list-group-item">Current Map:
+                        <?php echo $sq_infos['map']; ?>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="col-sm">
+                <?php
+                      $d=0;$h=0;$m=0;
+                      foreach ($sq_users as $user_cur){
+                        $pt_a=$user_cur['time']/60;
+                        $pt = floor($pt_a);
+
+                        if($pt <= 60){
+                            $m = $pt;
+                        }elseif($pt < 1440){
+                            $h=$pt/60;
+                            $m=$pt%60; 
+                        }elseif($pt >= 1440){
+                            $d=$pt/1440;
+                            $d_r=$pt%1440;
+                            $h=$d_r/60;
+                            $m=$d_r%60;
+                        }
+
+                        $d=number_format(floor($d),0); 
+                        $h=number_format(floor($h),0);
+                        $m=number_format(floor($m),0);
+
+
+                        if($user_cur['name'] == null) {
+                        echo "<li class='list-group-item'><a style='color:yellow;'>Connecting...</a></li> ";
+                        } else {
+                        echo "<li class='list-group-item'>Name:" .$user_cur['name']. "<br>Time Online: ". $d ." day(s) / ".$h. " hour(s) / ". $m ." minute(s) </li>\n";
+                        }
+                      }
+                      ?>
+                </div>
+              </div>
+          </div>   
+        </div>
+
+
         <div class="row">
           <div class="col-lg-12">
             <ul class="list-unstyled">
-              <li class="float-lg-right"><a class="text-primary" href="#top">Back to top</a></li>
-              <li><p>Made by <a class="text-primary" href="https://youtube.com/c/coderezzo">codeRezzo</a>.</p></li>
+              <li class="float-lg-right"><a class="text-white" href="#top">Back to top</a></li>
+              <li><p>Made by <a class="text-white" href="https://youtube.com/c/coderezzo">codeRezzo</a>.</p></li>
             </ul>
           </div>
         </div>
@@ -710,6 +811,20 @@ $('#goganglookup').click(function(e){
 // Close Gang lookup and go back to home selection screen.
 $('#gohome-ganglookup').click(function(e){
     $('#ganglookup').fadeOut('slow', function(){
+        $('#home').fadeIn('slow');
+    });
+});
+
+//Open the Server Stats panel
+$('#goserverstats').click(function(e){
+    $('#home').fadeOut('slow', function(){
+        $('#serverstats').fadeIn('slow');
+    });
+});
+
+// Close server stats and go back to home selection screen.
+$('#gohome-serverstats').click(function(e){
+    $('#serverstats').fadeOut('slow', function(){
         $('#home').fadeIn('slow');
     });
 });
