@@ -687,12 +687,12 @@ include('./queries/qry_lku_ganglist.php');
 
                 <div class="col-sm">
                 <?php
-                      $d=0;$h=0;$m=0;
+                      
                       foreach ($sq_users as $user_cur){
+                        $d=0;$h=0;$m=0;
                         $pt_a=$user_cur['time']/60;
                         $pt = floor($pt_a);
-
-                        if($pt <= 60){
+                        if($pt < 60){
                             $m = $pt;
                         }elseif($pt < 1440){
                             $h=$pt/60;
@@ -704,15 +704,15 @@ include('./queries/qry_lku_ganglist.php');
                             $m=$d_r%60;
                         }
 
+
                         $d=number_format(floor($d),0); 
                         $h=number_format(floor($h),0);
                         $m=number_format(floor($m),0);
 
-
                         if($user_cur['name'] == null) {
                         echo "<li class='list-group-item'><a style='color:yellow;'>Connecting...</a></li> ";
                         } else {
-                        echo "<li class='list-group-item'>Name:" .$user_cur['name']. "<br>Time Online: ". $d ." day(s) / ".$h. " hour(s) / ". $m ." minute(s) </li>\n";
+                        echo "<li class='list-group-item'>Name: " .$user_cur['name']. "<br>Time Online: ". $d ." day(s) / ".$h. " hour(s) / ". $m ." minute(s) </li>\n";
                         }
                       }
                       ?>
