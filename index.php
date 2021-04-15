@@ -71,7 +71,7 @@ include('./queries/qry_lku_ganglist.php');
       <div class="container">
        <ul class="list-unstyled">
         <h3 class="text-center">Highscores - Select a Section</h3> 
-        <li class="float-lg-left"><a class="text-whiite" href="https://rezzo.dev/">Go Back </a></li>
+        <li class="float-lg-left"><a class="text-white" href="https://rezzo.dev/" style="text-decoration: none;">Go Back </a></li>
       </ul>
       <br>
           <div class="row">
@@ -205,7 +205,7 @@ include('./queries/qry_lku_ganglist.php');
                     <div class="col-sm">
                         <div class="card-body">
                           <h4 class="card-title">Pinata Poppers</h4>
-                          <p class="card-text">$PID is rank #1 by beating opening $pcount Pinatas.</p>
+                          <p class="card-text">$PID is rank #1 by beating open $pcount Pinatas.</p>
                         </div>
                     </div>
                     <div class="col-sm">
@@ -711,9 +711,13 @@ include('./queries/qry_lku_ganglist.php');
 
                         if($user_cur['name'] == null) {
                         echo "<li class='list-group-item'><a style='color:yellow;'>Connecting...</a></li> ";
-                        } else {
-                        echo "<li class='list-group-item'>Name: " .$user_cur['name']. "<br>Time Online: ". $d ." day(s) / ".$h. " hour(s) / ". $m ." minute(s) </li>\n";
-                        }
+                        }else if($d == 0 && $h == 0){
+                        echo "<li class='list-group-item'>Name: " .$user_cur['name']. "<br>Time Online: ". $m ." minute(s) </li>\n";
+                        }else if($d == 0){
+						echo "<li class='list-group-item'>Name: " .$user_cur['name']. "<br>Time Online: ". $h . " hour(s) / ". $m ." minute(s) </li>\n";
+						}else{
+						echo "<li class='list-group-item'>Name: " .$user_cur['name']. "<br>Time Online: ". $d ." day(s) / ".$h. " hour(s) / ". $m ." minute(s) </li>\n";
+						}
                       }
                       ?>
                 </div>
