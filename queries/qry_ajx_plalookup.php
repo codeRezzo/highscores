@@ -9,8 +9,23 @@
     FROM bluerp_items 
     INNER JOIN bluerp_itemlist ON `bluerp_items`.`itemid` = `bluerp_itemlist`.`itemID` 
     WHERE `bluerp_items`.`steam_id` = '" .$q. "'
-    ORDER BY `bluerp_items`.`itemid` ASC";
+	AND `bluerp_items`.`itemid` != 250  
+	AND `bluerp_items`.`itemid` != 254
+	AND `bluerp_items`.`itemid` != 67
+	AND `bluerp_items`.`itemid` != 46
+	AND `bluerp_items`.`itemid` != 43
+	AND `bluerp_items`.`itemid` != 68
+	AND `bluerp_items`.`itemid` != 61
+	AND `bluerp_items`.`itemid` != 44
+	AND `bluerp_items`.`itemid` != 69
+	AND `bluerp_items`.`itemid` != 62
+	AND `bluerp_items`.`itemid` != 45
+	AND `bluerp_items`.`itemid` != 100
+	AND `bluerp_items`.`itemid` != 101
+	AND `bluerp_items`.`itemid` != 21
+    ORDER BY `bluerp_items`.`itemid` ASC;";
     $qret_useritems = mysqli_query($cold_link, $q_useritems);
+
 
     while($useritems_row = mysqli_fetch_array($qret_useritems)) {
         $user_inv_val += $useritems_row['quantity']*$useritems_row['price'];
@@ -41,7 +56,7 @@
         echo "<li class='list-group-item d-flex justify-content-between align-items-center'>Name: ". $user_row['username']."</li>";
         echo "<li class='list-group-item d-flex justify-content-between align-items-center'>Bank: $". number_format($user_row['bank'], 2) ."</li>";
         echo "<li class='list-group-item d-flex justify-content-between align-items-center'>Income: $". number_format($user_row['income']) ."</li>";
-        echo "<li class='list-group-item d-flex justify-content-between align-items-center'>Inventory: $". number_format($user_inv_val, 2) ."</li>";
+        echo "<li class='list-group-item d-flex justify-content-between align-items-center'>Inventory: $". number_format($user_inv_val, 0) ."</li>";
         echo "<li class='list-group-item d-flex justify-content-between align-items-center'>Playtime: " . $d . " days, " . $h . " hours, " . $m . " minutes</li>";
         echo "<li class='list-group-item d-flex justify-content-between align-items-center'>Experience: ". number_format($user_row['experience']) ."</li>";
         echo "<li class='list-group-item d-flex justify-content-between align-items-center'>Respect: ". number_format($user_row['respect']) ."</li>";

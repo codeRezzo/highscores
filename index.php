@@ -20,7 +20,7 @@
 
 
 <?php 
-//Connect
+//Connect to the DB.
 include('connect.php');
 
 //white Ladders
@@ -63,16 +63,43 @@ include('./queries/qry_grp_com.php');
 //AJAX Lookup.
 include('./queries/qry_lku_plalist.php');
 include('./queries/qry_lku_ganglist.php');
+
+
+// Handle the sign in process.
+require ('./vendor/steamauth/steamauth.php');
+function sa_signin_btn(){
+  if(!isset($_SESSION['steamid'])) {
+
+    echo '<li class="float-lg-right"><a class="btn btn-outline-success" href="?login">Sign In</a></li>'; 
+    } else {
+    echo '<li class="float-lg-right"><a class="btn btn-outline-success" href="profile.php">My Profile</a>';
+    echo '<a class="btn btn-outline-success" href="?logout">Sign Out</a></li>';
+    }  
+}
 ?>
 
-  <div class="container">
+<div class="container">
     <h1 class="display-2 text-center">Rezzo.Dev</h1>
-    <div class="jumbotron shadow p-3 mb-5 bg-dark rounded" id="home">
+    <div id="home"><!-- Wrapper for home and patchnotes etc -->
+    <div class="jumbotron shadow p-3 mb-5 bg-dark rounded">
       <div class="container">
        <ul class="list-unstyled">
         <h3 class="text-center">Highscores - Select a Section</h3> 
-        <li class="float-lg-left"><a class="text-white" href="https://rezzo.dev/" style="text-decoration: none;">Go Back </a></li>
+        <?php if(isset($_SESSION['steamid'])) {
+              include ('./vendor/steamauth/userInfo.php');
+
+              // Successful sign in.
+              include ('./queries/qry_prfl_signup.php');
+              // Setup our signed in user.
+              qry_prfl_setup();
+
+              echo "<li class='text-center'>Welcome back, " . $steamprofile['personaname']. "\n</li>"; 
+              }
+        ?>
+		    <li class="float-lg-left"><a class="btn btn-outline-success" href="https://rezzo.dev/">Go Back</a></li>
+		    <?php sa_signin_btn() ?>
       </ul>
+	  <br>
       <br>
           <div class="row">
             <div class="col-sm">
@@ -120,17 +147,91 @@ include('./queries/qry_lku_ganglist.php');
               </div>
             </div>
           </div>
-
       </div>
     </div>
+
+    <div class="jumbotron shadow p-3 mb-5 bg-dark rounded">
+          <div class="container">
+              <ul class="list-unstyled">
+                <h3 class="text-center">- Privacy Update Part 2 -</h3>
+				        <li class="float-lg-left">Patch: 24/04/2021 - Highscores</li>
+              </ul>
+            <br>
+		      	<br>
+
+            <p><strong>- Steam Auth & Privacy -</strong></p>
+            <p>Added Steamauth, users can now sign in through Steam.</p>
+            <p>User profile framework created for new feature functionality.</p>
+            <p>Enabled all website sign in buttons.</p>
+            <p>Added user profile button.</p>
+            <p>User Sign Up Checks, inserts & updates information accordingly upon sign-in.</p>
+            <p>Ability to opt out of player lookup added to the players profile.</p>
+            <p>Player Look Up tool will now NOT list a individual who has opted out.</p>
+            <p>Opting out of Player Look Up tool will restrict information you can view on another player.</p>
+            <br>
+            <p>As more features are added, more Opt-In / Out options will be added. As well as more feature that are sign-in required.</p>
+            <p>Not many patch notes for this update but the changes are a big deal.</p>
+            <p class="text-muted" >Note: Signing in through steam immediately opts players into historical stat tracking leaderboards.</p>
+
+            <p><strong> - UI Changes - </strong></p>
+            <p>Player data updating set-up to work via AJAX script to avoid unnecessary page loads.</p>
+            <br>
+            <p>https://github.com/codeRezzo/highscores</p>
+          </div>   
+        </div>
+
+    <div class="jumbotron shadow p-3 mb-5 bg-dark rounded">
+          <div class="container">
+              <ul class="list-unstyled">
+                <h3 class="text-center">- Privacy Update Part 1 -</h3>
+				        <li class="float-lg-left">Patch: 21/04/2021 - Highscores</li>
+              </ul>
+            <br>
+		      	<br>
+
+            <p><strong>- Privacy -</strong></p>
+            <p>Item Filters - Player look up tool has been updated to filter out a number of items.</p>
+            <p>The following items will no longer be accounted for towards player inventory value:</p>
+            <ul>
+            <li>250 - Super door Hack</li>
+            <li>254 - Dogs Cuff Saw</li>
+            <li>67 - (1) Cuff Saw</li>
+            <li>68 - (2) Cuff Saw</li>
+            <li>69 - (3) Cuff Saw</li>
+            <li>46 - (1) Door Hack</li>
+            <li>61 - (2) Door Hack</li>
+            <li>62 - (3) Door Hack</li>
+            <li>43 - (1) Lockpick</li>
+            <li>44 - (2) Lockpick</li>
+            <li>45 - (3) Lockpick</li>
+            <li>100 - Lockbreaker</li>
+            <li>101 - Lock</li>
+            </ul>
+            <br>
+            <p><strong> - Steamauth - </strong></p>
+            <p>With the advancing nature of highscores and several coming features, sign-in-through steam is being added.</p>
+            <p>Using Steamauth players will be able to sign into highscores and choose to opt-in or opt-out of any other ladders or additional highscores features.</p>
+            <p class="text-muted" >Note: You cannot opt-out of primary ladders.</p>
+
+            <p><strong> - UI Changes - </strong></p>
+            <p>Sign-In button added to all pages, however not yet functional.</p>
+            <br>
+            <p>https://github.com/codeRezzo/highscores</p>
+          </div>   
+        </div>
+
+
+  </div><!-- end of wrapper for home and patchnotes etc -->
 
         <div class="jumbotron shadow p-3 mb-5 bg-dark rounded" id="ladders" style="display:none;">
           <div class="container">
               <ul class="list-unstyled">
                 <h3 class="text-center">Primary Ladders</h3>
-                <li class="float-lg-left" id="gohome">Go Back</li>
+                <li class="float-lg-left"><a class="btn btn-outline-success" id="gohome">Go Back</a></li>
+				<?php sa_signin_btn() ?>
               </ul>
             <br>
+			<br>
             <div class="card border-success mb-3">
               <div class="row">
                 <div class="col-sm">
@@ -259,10 +360,12 @@ include('./queries/qry_lku_ganglist.php');
           <div class="container">
               <ul class="list-unstyled">
                 <h3 class="text-center">Playtime Ladder</h3>
-                <li class="float-lg-left" id="gobackladders-pla">Go Back</li>
-                <li class="float-lg-right">Displaying Rows 0-25</li>
+				<li class="float-lg-left"><a class="btn btn-outline-success" id="gobackladders-pla">Go Back</a></li>
+				<?php sa_signin_btn() ?>
               </ul>
-
+            <br>
+			<br>
+			
               <table class="table table-hover">
                 <thead>
                   <tr>
@@ -282,9 +385,12 @@ include('./queries/qry_lku_ganglist.php');
           <div class="container">
               <ul class="list-unstyled">
                 <h3 class="text-center">Economy Ladder</h3>
-                <li class="float-lg-left" id="gobackladders-eco">Go Back</li>
-                <li class="float-lg-right">Displaying Rows 0-25</li>
+				<li class="float-lg-left"><a class="btn btn-outline-success" id="gobackladders-eco">Go Back</a></li>
+				<?php sa_signin_btn() ?>
               </ul>
+            <br>
+			<br>
+
 
               <table class="table table-hover">
                 <thead>
@@ -306,9 +412,11 @@ include('./queries/qry_lku_ganglist.php');
           <div class="container">
               <ul class="list-unstyled">
                 <h3 class="text-center">Combat Ladder</h3>
-                <li class="float-lg-left" id="gobackladders-com">Go Back</li>
-                <li class="float-lg-right">Displaying Rows 0-25</li>
+				<li class="float-lg-left"><a class="btn btn-outline-success" id="gobackladders-com">Go Back</a></li>
+				<?php sa_signin_btn() ?>
               </ul>
+            <br>
+			<br>
 
               <table class="table table-hover">
                 <thead>
@@ -331,9 +439,11 @@ include('./queries/qry_lku_ganglist.php');
           <div class="container">
               <ul class="list-unstyled">
                 <h3 class="text-center">Respect Ladder</h3>
-                <li class="float-lg-left" id="gobackladders-res">Go Back</li>
-                <li class="float-lg-right">Displaying Rows 0-25</li>
+				<li class="float-lg-left"><a class="btn btn-outline-success" id="gobackladders-res">Go Back</a></li>
+				<?php sa_signin_btn() ?>
               </ul>
+            <br>
+			<br>
 
               <table class="table table-hover">
                 <thead>
@@ -354,9 +464,11 @@ include('./queries/qry_lku_ganglist.php');
           <div class="container">
               <ul class="list-unstyled">
                 <h3 class="text-center">Experience Ladder</h3>
-                <li class="float-lg-left" id="gobackladders-exp">Go Back</li>
-                <li class="float-lg-right">Displaying Rows 0-25</li>
+				<li class="float-lg-left"><a class="btn btn-outline-success" id="gobackladders-exp">Go Back</a></li>
+				<?php sa_signin_btn() ?>
               </ul>
+            <br>
+			<br>
 
               <table class="table table-hover">
                 <thead>
@@ -377,9 +489,12 @@ include('./queries/qry_lku_ganglist.php');
           <div class="container">
               <ul class="list-unstyled">
                 <h3 class="text-center">Dueling Ladder</h3>
-                <li class="float-lg-left" id="gobackladders-due">Go Back</li>
-                <li class="float-lg-right">Displaying Rows 0-25</li>
+				<li class="float-lg-left"><a class="btn btn-outline-success" id="gobackladders-due">Go Back</a></li>
+				<?php sa_signin_btn() ?>
               </ul>
+            <br>
+			<br>
+
 
               <table class="table table-hover">
                 <thead>
@@ -403,9 +518,11 @@ include('./queries/qry_lku_ganglist.php');
           <div class="container">
               <ul class="list-unstyled">
                 <h3 class="text-center">Gang Economy Ladder</h3>
-                <li class="float-lg-left" id="gobackladders-geco">Go Back</li>
-                <li class="float-lg-right">Displaying Rows 0-25</li>
+				<li class="float-lg-left"><a class="btn btn-outline-success" id="gobackladders-geco">Go Back</a></li>
+				<?php sa_signin_btn() ?>
               </ul>
+            <br>
+			<br>
 
               <table class="table table-hover">
                 <thead>
@@ -427,9 +544,11 @@ include('./queries/qry_lku_ganglist.php');
           <div class="container">
               <ul class="list-unstyled">
                 <h3 class="text-center">Gang Respect Ladder</h3>
-                <li class="float-lg-left" id="gobackladders-gres">Go Back</li>
-                <li class="float-lg-right">Displaying Rows 0-25</li>
+				<li class="float-lg-left"><a class="btn btn-outline-success" id="gobackladders-gres">Go Back</a></li>
+				<?php sa_signin_btn() ?>
               </ul>
+            <br>
+			<br>
 
               <table class="table table-hover">
                 <thead>
@@ -450,9 +569,11 @@ include('./queries/qry_lku_ganglist.php');
           <div class="container">
               <ul class="list-unstyled">
                 <h3 class="text-center">Gang Experience Ladder</h3>
-                <li class="float-lg-left" id="gobackladders-gexp">Go Back</li>
-                <li class="float-lg-right">Displaying Rows 0-25</li>
+				<li class="float-lg-left"><a class="btn btn-outline-success" id="gobackladders-gexp">Go Back</a></li>
+				<?php sa_signin_btn() ?>
               </ul>
+            <br>
+			<br>
 
               <table class="table table-hover">
                 <thead>
@@ -473,9 +594,12 @@ include('./queries/qry_lku_ganglist.php');
           <div class="container">
               <ul class="list-unstyled">
                 <h3 class="text-center">Visual Scores - BAR</h3>
-                <li class="float-lg-left" id="gohome-vissco-bar">Go Back</li>
-                <li class="float-lg-right"id="govisualscores-pie" >View as Pie Graphs</li>
-              </ul><br>
+				<li class="float-lg-left"><a class="btn btn-outline-success" id="gohome-vissco-bar">Go Back</a></li>
+				<li class="float-lg-right"><a class="btn btn-outline-success" id="govisualscores-pie">Pie Graphs</a></li>
+              </ul>
+            <br>
+			<br>
+			  
                 <div class="row">
 
                     <div class="col-sm">
@@ -513,9 +637,11 @@ include('./queries/qry_lku_ganglist.php');
           <div class="container">
               <ul class="list-unstyled">
                 <h3 class="text-center">Visual Scores - PIE</h3>
-                <li class="float-lg-left" id="gohome-vissco-pie">Go Back</li>
-                <li class="float-lg-right" id="govisualscores-bar">View as Bar Graphs</li>
-              </ul><br>
+				<li class="float-lg-left"><a class="btn btn-outline-success" id="gohome-vissco-pie">Go Back</a></li>
+				<li class="float-lg-right"><a class="btn btn-outline-success" id="govisualscores-bar">Pie Graphs</a></li>
+              </ul>
+            <br>
+			<br>
                 <div class="row">
 
                     <div class="col-sm">
@@ -553,11 +679,11 @@ include('./queries/qry_lku_ganglist.php');
           <div class="container">
               <ul class="list-unstyled">
                 <h3 class="text-center">Player Look Up</h3>
-                <li class="float-lg-left" id="gohome-playerlookup">Go Back</li>
-                <li class="float-lg-right">Beta 1.6.1</li>
+			  	<li class="float-lg-left"><a class="btn btn-outline-success" id="gohome-playerlookup">Go Back</a></li>
+				<?php sa_signin_btn() ?>
               </ul>
-              <br>
-
+            <br>
+			      <br> 
               <div class="row">
                 <div class="col-sm">
 
@@ -593,10 +719,11 @@ include('./queries/qry_lku_ganglist.php');
           <div class="container">
               <ul class="list-unstyled">
                 <h3 class="text-center">Gang Look Up</h3>
-                <li class="float-lg-left" id="gohome-ganglookup">Go Back</li>
-                <li class="float-lg-right">Beta 1.1</li>
+			  	<li class="float-lg-left"><a class="btn btn-outline-success" id="gohome-ganglookup">Go Back</a></li>
+				<?php sa_signin_btn() ?>
               </ul>
-              <br>
+            <br>
+			<br>
 
               <div class="row">
                 <div class="col-sm">
@@ -633,10 +760,11 @@ include('./queries/qry_lku_ganglist.php');
           <div class="container">
               <ul class="list-unstyled">
                 <h3 class="text-center">Server Stats</h3>
-                <li class="float-lg-left" id="gohome-serverstats">Go Back</li>
-                <li class="float-lg-right">Last updated: Less than 1 minute ago.</li>
+			  	<li class="float-lg-left"><a class="btn btn-outline-success" id="gohome-serverstats">Go Back</a></li>
+				<?php sa_signin_btn() ?>
               </ul>
-              <br>
+            <br>
+			<br>
 
               <?php 
 
@@ -714,10 +842,10 @@ include('./queries/qry_lku_ganglist.php');
                         }else if($d == 0 && $h == 0){
                         echo "<li class='list-group-item'>Name: " .$user_cur['name']. "<br>Time Online: ". $m ." minute(s) </li>\n";
                         }else if($d == 0){
-						echo "<li class='list-group-item'>Name: " .$user_cur['name']. "<br>Time Online: ". $h . " hour(s) / ". $m ." minute(s) </li>\n";
-						}else{
-						echo "<li class='list-group-item'>Name: " .$user_cur['name']. "<br>Time Online: ". $d ." day(s) / ".$h. " hour(s) / ". $m ." minute(s) </li>\n";
-						}
+                        echo "<li class='list-group-item'>Name: " .$user_cur['name']. "<br>Time Online: ". $h . " hour(s) / ". $m ." minute(s) </li>\n";
+                        }else{
+                        echo "<li class='list-group-item'>Name: " .$user_cur['name']. "<br>Time Online: ". $d ." day(s) / ".$h. " hour(s) / ". $m ." minute(s) </li>\n";
+                        }
                       }
                       ?>
                 </div>
