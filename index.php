@@ -59,6 +59,7 @@ include('./queries/qry_grp_gbank.php');
 include('./queries/qry_grp_bank.php');
 include('./queries/qry_grp_pla.php');
 include('./queries/qry_grp_com.php');
+include('./queries/qry_grp_ser_his_bank.php');
 
 //AJAX Lookup.
 include('./queries/qry_lku_plalist.php');
@@ -137,6 +138,12 @@ function sa_signin_btn(){
               </div>
             </div>
             <div class="col-sm">
+              <div class="card border-danger mb-3">
+                  <div class="card-body" id="goglobalhistory">
+                    <h4 class="card-title">Global History - BETA</h4>
+                    <p class="card-text">30 Day global history.</p>
+                  </div>
+              </div>
             </div>
             <div class="col-sm">
               <div class="card border-success mb-3">
@@ -637,11 +644,11 @@ function sa_signin_btn(){
           <div class="container">
               <ul class="list-unstyled">
                 <h3 class="text-center">Visual Scores - PIE</h3>
-				<li class="float-lg-left"><a class="btn btn-outline-success" id="gohome-vissco-pie">Go Back</a></li>
-				<li class="float-lg-right"><a class="btn btn-outline-success" id="govisualscores-bar">Bar Graphs</a></li>
+				          <li class="float-lg-left"><a class="btn btn-outline-success" id="gohome-vissco-pie">Go Back</a></li>
+				          <li class="float-lg-right"><a class="btn btn-outline-success" id="govisualscores-bar">Bar Graphs</a></li>
               </ul>
             <br>
-			<br>
+			      <br>
                 <div class="row">
 
                     <div class="col-sm">
@@ -674,6 +681,26 @@ function sa_signin_btn(){
                 </div>
           </div>   
         </div>
+
+        <div class="jumbotron shadow p-3 mb-5 bg-dark rounded" id="globalhistory" style="display:none;">
+          <div class="container">
+              <ul class="list-unstyled">
+                <h3 class="text-center">Global History</h3>
+				          <li class="float-lg-left"><a class="btn btn-outline-success" id="gohome-globalhistory">Go Back</a></li>
+                  <?php sa_signin_btn() ?>
+              </ul>
+              <br>
+			        <br>
+                <div class="row">
+                    <div class="col-sm">
+                        <div class="card-body">
+                          <h4 class="card-title text-center">Global History Bank</h4>
+                          <canvas id="chr-his-bank" max-height="250"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>   
 
         <div class="jumbotron shadow p-3 mb-5 bg-dark rounded" id="playerlookup" style="display:none;">
           <div class="container">
@@ -919,6 +946,20 @@ $('#gohome-vissco-pie').click(function(e){
     });
 });
 
+//Open globalhistory and close home.
+$('#goglobalhistory').click(function(e){
+    $('#home').fadeOut('slow', function(){
+        $('#globalhistory').fadeIn('slow');
+    });
+});
+
+//Close globalhistory go back to home.
+$('#gohome-globalhistory').click(function(e){
+    $('#globalhistory').fadeOut('slow', function(){
+        $('#home').fadeIn('slow');
+    });
+});
+
 //Open the player lookup panel
 $('#goplayerlookup').click(function(e){
     $('#home').fadeOut('slow', function(){
@@ -1080,6 +1121,7 @@ include('./graphs/chr_gbank.php');
 include('./graphs/chr_bank.php'); 
 include('./graphs/chr_pla.php'); 
 include('./graphs/chr_com.php'); 
+include('./graphs/chr_his_bank.php'); 
 ?>
 
 
