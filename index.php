@@ -638,7 +638,7 @@ function sa_signin_btn(){
               <ul class="list-unstyled">
                 <h3 class="text-center">Visual Scores - PIE</h3>
 				<li class="float-lg-left"><a class="btn btn-outline-success" id="gohome-vissco-pie">Go Back</a></li>
-				<li class="float-lg-right"><a class="btn btn-outline-success" id="govisualscores-bar">Pie Graphs</a></li>
+				<li class="float-lg-right"><a class="btn btn-outline-success" id="govisualscores-bar">Bar Graphs</a></li>
               </ul>
             <br>
 			<br>
@@ -1127,7 +1127,6 @@ $input.keyup(function(){
 });
 
 });
-
 
 //Handling Gang lookup AJAX request
 function showGang(str) {
