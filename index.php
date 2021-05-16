@@ -59,7 +59,7 @@ include('./queries/qry_grp_gbank.php');
 include('./queries/qry_grp_bank.php');
 include('./queries/qry_grp_pla.php');
 include('./queries/qry_grp_com.php');
-include('./queries/qry_grp_ser_his_bank.php');
+include('./queries/qry_grp_ser_his_global.php');
 
 //AJAX Lookup.
 include('./queries/qry_lku_plalist.php');
@@ -695,7 +695,23 @@ function sa_signin_btn(){
                     <div class="col-sm">
                         <div class="card-body">
                           <h4 class="card-title text-center">Global History Bank</h4>
-                          <canvas id="chr-his-bank" max-height="250"></canvas>
+                          <canvas id="chr-his-bank" max-height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm">
+                        <div class="card-body">
+                          <h4 class="card-title text-center">Global History Playtime</h4>
+                          <canvas id="chr-his-playtime" max-height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm">
+                        <div class="card-body">
+                          <h4 class="card-title text-center">Global History Player Count</h4>
+                          <canvas id="chr-his-playercount" max-height="200"></canvas>
                         </div>
                     </div>
                 </div>
@@ -1122,6 +1138,8 @@ include('./graphs/chr_bank.php');
 include('./graphs/chr_pla.php'); 
 include('./graphs/chr_com.php'); 
 include('./graphs/chr_his_bank.php'); 
+include('./graphs/chr_his_playtime.php'); 
+include('./graphs/chr_his_playercount.php'); 
 ?>
 
 

@@ -8,7 +8,8 @@ var GlobalHistory_Bank = new Chart(document.getElementById("chr-his-bank"), {
         datasets: [{
             label: 'Global Bank',
             data: <?php print json_encode($ser_his_bank); ?>,
-            fill: false,
+            fill: true,
+            backgroundColor: 'rgba(75, 192, 192, 0.4)',
             borderColor: 'rgb(75, 192, 192)',
             tension: 0.1
         }]
