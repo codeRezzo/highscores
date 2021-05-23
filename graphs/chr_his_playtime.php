@@ -6,7 +6,7 @@ var GlobalHistory_Bank = new Chart(document.getElementById("chr-his-playtime"), 
     data: {
         labels: <?php print json_encode($ser_his_date); ?>,
         datasets: [{
-            label: 'Global Player Count',
+            label: 'Global Playtime',
             data: <?php print json_encode($ser_his_playtime); ?>,
             fill: true,
             backgroundColor: 'rgba(100, 122, 255, 0.4)',
