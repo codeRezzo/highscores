@@ -7,17 +7,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
      <link rel="stylesheet" href="./vendor/bootstrap/css/bootstrap.min.css">
      <link rel="stylesheet" href="./vendor/bootstrap/css/custom.min.css">
-     <link rel="stylesheet" href="./vendor/wavewrapper.css">
      <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
-
 </head>
 <html>
   <style>::-webkit-scrollbar { display: none;}</style>
+  <style>.anychart-credits{display: none;}</style>
   <body style="min-height: 100vh; background: rgb(23, 23, 23);
   background: linear-gradient(210deg, rgba(23, 23, 23,1) 0%, rgba(50, , 23,1) 51%, rgba(23, 23, 23,1) 100%);">
-
-
-
 
 <?php 
 //Connect to the DB.
@@ -138,9 +134,9 @@ function sa_signin_btn(){
               </div>
             </div>
             <div class="col-sm">
-              <div class="card border-danger mb-3">
+              <div class="card border-success mb-3">
                   <div class="card-body" id="goglobalhistory">
-                    <h4 class="card-title">Global History - BETA</h4>
+                    <h4 class="card-title">Global History</h4>
                     <p class="card-text">30 Day global history.</p>
                   </div>
               </div>
@@ -152,6 +148,20 @@ function sa_signin_btn(){
                   <p class="card-text">Look up information on a specific Gang.</p>
                 </div>
               </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm">
+              <div class="card border-danger mb-3">
+                <div class="card-body" id="goheatmaps" >
+                  <h4 class="card-title">Heat Maps - Alpha</h4>
+                  <p class="card-text">The most popular places.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
             </div>
           </div>
       </div>
@@ -896,6 +906,22 @@ function sa_signin_btn(){
           </div>   
         </div>
 
+        
+        <div class="jumbotron shadow p-3 mb-5 bg-dark rounded" id="heatmaps" style="display:none;">
+          <div class="container">
+              <ul class="list-unstyled">
+                <h3 class="text-center">Heat Maps - Alpha</h3>
+				          <li class="float-lg-left"><a class="btn btn-outline-success" id="gohome-heatmaps">Go Back</a></li>
+                  <?php sa_signin_btn() ?>
+              </ul>
+              <br>
+			        <br>
+              <div class="container">
+                <div class="shadow" id="hm-primary" style="width: 1024px;height: 1024px;"></div>
+              </div>
+
+            </div>
+        </div>   
 
         <div class="row">
           <div class="col-lg-12">
@@ -1018,6 +1044,20 @@ $('#gohome-serverstats').click(function(e){
     });
 });
 
+//Open the Server Stats panel
+$('#goheatmaps').click(function(e){
+    $('#home').fadeOut('slow', function(){
+        $('#heatmaps').fadeIn('slow');
+    });
+});
+
+// Close server stats and go back to home selection screen.
+$('#gohome-heatmaps').click(function(e){
+    $('#heatmaps').fadeOut('slow', function(){
+        $('#home').fadeIn('slow');
+    });
+});
+
 // Handle going back.. for some reason each ladder needed its own function.
 // Close the ladder and return to ladder selection.
 // Each return-element required a unique ID.. otherwise it would've been so much simpler. :-|
@@ -1129,6 +1169,8 @@ $('#gogangrespect').click(function(e){
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <script src="./vendor/chosen/chosen.jquery.js" type="text/javascript"></script>
+<script src="./vendor/heatjs/simpleheat.js"></script>
+<script src="./vendor/anychartjs/anychart.js"></script>
 
 <?php 
 //GRAPHINC
@@ -1204,6 +1246,137 @@ function showGang(str) {
     xmlhttp.send();
   }
 }
+</script>
+
+
+<script>
+/*
+//Scales
+32768/32=1,024
+32768/16=2,048
+16384/32=512
+
+North East - PD:                2945.59, 4374.06
+North West - gun Store:        -1446.21, 2674.34
+South West - Gas Station:      -1441.28, -2494.62
+South Middle - Park Trash Can:  632.71, -590.15
+South East - Cafe:              1858.37, -2493.40
+South Middle - Bank:            1363.62, -790.12
+
+-- Additional /2 is for a canvas size of 512x512, otherwise just do /32 for a 1024x1024 canvas.
+[V1,V2,1]
+//To get the Top Right Co-Ordinates 
+V1+16,384/32/2 = V1 Result
+V2/32/2 = V2 Result
+
+[-V1,V2,1]
+//To get the Top Left Co-Ordinates 
+V1 Convert Positive -> V1/32/2 = V1 Result
+16,384-V2/32/2 = V1 Result
+
+[-V1,-V2,1]
+//To get the Bottom Left Co-Ordinates 
+V1 Convert Positive -> V1/32/2= V1 Result
+V2 Convert Positive -> V2+16,384/32/2= V2 Result
+
+[-V1,-V2,1]
+//To get the Bottom right Co-Ordinates 
+V1+16,384/32/2= V1 Result
+32,768+V2/32/2= V2 Result
+
+-- Scale 1024/1024 32 
+[[604.04, 136.68,1], //pd TR
+[45.19, 428.42,1], //gunstore TL
+[45.03, 589.95,1],  // gas station BL
+[570.07, 589.91,1], // cafe BR
+[0, 1024,0.8],
+[1024, 1024,0.9]];
+*/
+
+//setpos 146.406250 1135.593750 371.843750
+//[258.28, 17.74, 1]
+  /*var data = [[302.4, 68.34,1], //pd TR
+              [22.59, 214.21,1], //gunstore TL
+              [22.51, 473.03,1],  // gas station BL
+              [285.03, 473.04,1], // cafe BR  To go down, 32k+x/32/2
+              [258.28, 273, 0.9],
+              [0, 512,0.8],
+              [512, 512,0.9]];
+
+simpleheat('hm-primary').data(data).draw();*/
+// we aren't using simple heat but I'm keeping it in for now in the event I fall back on it.
+
+//T2D for the cheatmap primary
+var data = [
+  {x: 92.049, value: 136.68},
+  {x: -45.19, value: 83.57},
+  {x: -45.04, value: -77.95},
+  {x: 19.77, value: -18.44},
+  {x: 58.07, value: -77.91},
+  {x: 42.61, value: -24.69}
+];
+
+chart = anychart.scatter(data);
+  chart.quarters(
+    {
+        rightTop: {
+            fill: "#303030"
+        },
+        rightBottom: {
+            fill: "#303030"
+        },
+        leftTop: {
+            fill: "#303030"
+        },
+        leftBottom: {
+            fill: "#303030"
+        },
+    }
+  );
+
+chart.crossing().stroke("#303030");
+
+chart.yScale().minimum(-256);
+chart.yScale().maximum(256);
+chart.xScale().minimum(-256);
+chart.xScale().maximum(256);
+
+chart.background().fill("#303030");
+
+chart.xGrid().enabled(true);
+chart.yGrid().enabled(true);
+chart.xMinorGrid().enabled(true);
+chart.yMinorGrid().enabled(true);
+
+chart.xAxis().stroke({
+  color: "#404040",
+});
+chart.yAxis().stroke({
+  color: "#404040",
+});
+
+chart.xGrid().stroke({
+  color: "#454545",
+});
+chart.yGrid().stroke({
+  color: "#454545",
+});
+chart.xMinorGrid().stroke({
+  color: "#404040",
+});
+chart.yMinorGrid().stroke({
+  color: "#404040",
+});
+
+// Background...for when we need it.
+/*chart.background().fill({
+  src: "./images/bendor/map1.jpg",
+  mode: "fit"
+});*/
+
+chart.container("hm-primary");
+chart.draw();
+
 </script>
 
   </body>
