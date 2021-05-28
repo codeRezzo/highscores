@@ -34,7 +34,26 @@ var myChart = new Chart(ctx, {
             ],
             borderWidth: 1
         }]
-    }
+    },
+    options: { 
+            legend: {
+                labels: {
+                    fontColor: "white"
+                }
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        fontColor: "white"
+                    }
+                }],
+                xAxes: [{
+                    ticks: {
+                        fontColor: "white"
+                    }
+                }]
+            }
+        }
 });
 
 //create player bank pie graph
@@ -72,6 +91,13 @@ var myChart = new Chart(ctx, {
             ],
             borderWidth: 1
         }]
+    },
+    options: { 
+            legend: {
+                labels: {
+                    fontColor: "white"
+                }
+            }
     }
 });
 </script>

@@ -53,13 +53,13 @@
         $h=number_format($h,0);
         $m=number_format($m,0);
 
-        echo "<li class='list-group-item d-flex justify-content-between align-items-center'>Name: ". $user_row['username']."</li>";
-        echo "<li class='list-group-item d-flex justify-content-between align-items-center'>Bank: $". number_format($user_row['bank'], 2) ."</li>";
-        echo "<li class='list-group-item d-flex justify-content-between align-items-center'>Income: $". number_format($user_row['income']) ."</li>";
-        echo "<li class='list-group-item d-flex justify-content-between align-items-center'>Inventory: $". number_format($user_inv_val, 0) ."</li>";
-        echo "<li class='list-group-item d-flex justify-content-between align-items-center'>Playtime: " . $d . " days, " . $h . " hours, " . $m . " minutes</li>";
-        echo "<li class='list-group-item d-flex justify-content-between align-items-center'>Experience: ". number_format($user_row['experience']) ."</li>";
-        echo "<li class='list-group-item d-flex justify-content-between align-items-center'>Respect: ". number_format($user_row['respect']) ."</li>";
+        echo "<li class='list-group-item d-flex justify-content-between align-items-center border-white bg-transparent text-white'>Name: ". $user_row['username']."</li>";
+        echo "<li class='list-group-item d-flex justify-content-between align-items-center border-white bg-transparent text-white'>Bank: $". number_format($user_row['bank'], 2) ."</li>";
+        echo "<li class='list-group-item d-flex justify-content-between align-items-center border-white bg-transparent text-white'>Income: $". number_format($user_row['income']) ."</li>";
+        echo "<li class='list-group-item d-flex justify-content-between align-items-center border-white bg-transparent text-white'>Inventory: $". number_format($user_inv_val, 0) ."</li>";
+        echo "<li class='list-group-item d-flex justify-content-between align-items-center border-white bg-transparent text-white'>Playtime: " . $d . " days, " . $h . " hours, " . $m . " minutes</li>";
+        echo "<li class='list-group-item d-flex justify-content-between align-items-center border-white bg-transparent text-white'>Experience: ". number_format($user_row['experience']) ."</li>";
+        echo "<li class='list-group-item d-flex justify-content-between align-items-center border-white bg-transparent text-white'>Respect: ". number_format($user_row['respect']) ."</li>";
     }
     echo "</ul>";
 ?>

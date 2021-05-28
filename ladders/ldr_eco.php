@@ -9,10 +9,11 @@ function tbl_eco($qret_eco, $banned_users){
             $eco_income = number_format($eco_row['income'], 0);
             $eco_bank = number_format($eco_row['bank'], 0);
 
+            $eco_style = func_glow($eco_row['income']);
 
             echo "<tr>\n";
             echo "<td>". $i ."</td>\n";	
-            echo "<td>". $eco_name  ."</td>\n";
+            echo  $eco_style ."". $eco_name  ."</td>\n";
             echo "<td>$". $eco_income  ."/min</td>\n";
             echo "<td>$". $eco_bank  ."</td>\n";
             echo "</tr>\n";

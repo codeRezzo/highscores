@@ -22,11 +22,13 @@ function tbl_pla($qret_pla, $banned_users){
             $d=number_format($d,0); 
             $h=number_format($h,0);
             $m=number_format($m,0);
+            
+            $pla_style = func_glow($pla_row['income']);
             $pla_name = $pla_row['name'];
 
             echo "<tr>\n";
             echo "<td>". $i ."</td>\n";	
-            echo "<td>". $pla_name  ."</td>\n";
+            echo  $pla_style . "". $pla_name  ."</td>\n";
             echo "<td>" . $d . " days, " . $h . " hours, " . $m . " minutes </td>\n";
             echo "</tr>\n";
             //Breakout at 25 listed users

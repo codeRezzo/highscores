@@ -17,11 +17,11 @@
 
 
         echo '<ul class="list-group">';
-        echo "<li class='list-group-item d-flex justify-content-between align-items-center'><b>Member: ". $gang_row['username']."</b></li>";
-        echo "<li class='list-group-item d-flex justify-content-between align-items-center'>Steam ID: ". $gang_row['steam_id']."</b></li>";
-        echo "<li class='list-group-item d-flex justify-content-between align-items-center'>Status: ". $gang_row['employment']."</li>";
-        echo "<li class='list-group-item d-flex justify-content-between align-items-center'>Specialty: ".$g_spec ."</li>";
-        echo "<li class='list-group-item d-flex justify-content-between align-items-center'>Respect: ". $g_res ."</li>";
+        echo "<li class='list-group-item d-flex justify-content-between align-items-center border-white bg-transparent text-white'><b>Member: ". $gang_row['username']."</b></li>";
+        echo "<li class='list-group-item d-flex justify-content-between align-items-center border-white bg-transparent text-white'>Steam ID: ". $gang_row['steam_id']."</b></li>";
+        echo "<li class='list-group-item d-flex justify-content-between align-items-center border-white bg-transparent text-white'>Status: ". $gang_row['employment']."</li>";
+        echo "<li class='list-group-item d-flex justify-content-between align-items-center border-white bg-transparent text-white'>Specialty: ".$g_spec ."</li>";
+        echo "<li class='list-group-item d-flex justify-content-between align-items-center border-white bg-transparent text-white'>Respect: ". $g_res ."</li>";
         echo "</ul>";
         echo "<br>";
     }

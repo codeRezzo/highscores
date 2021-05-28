@@ -13,6 +13,25 @@ var GlobalHistory_Bank = new Chart(document.getElementById("chr-his-playercount"
             borderColor: 'rgb(255, 100, 122)',
             tension: 0.1
         }]
-    }
+    },
+    options: { 
+            legend: {
+                labels: {
+                    fontColor: "white"
+                }
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        fontColor: "white"
+                    }
+                }],
+                xAxes: [{
+                    ticks: {
+                        fontColor: "white"
+                    }
+                }]
+            }
+        }
 });
 </script>
