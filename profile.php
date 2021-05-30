@@ -5,11 +5,15 @@
     <title>Profile - Highscores</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-     <link rel="stylesheet" href="./vendor/bootstrap/css/bootstrap.min.css">
-     <link rel="stylesheet" href="./vendor/bootstrap/css/custom.min.css">
-     <link rel="stylesheet" href="./vendor/wavewrapper.css">
-     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-
+    <link rel="icon" type="image/x-icon" href="vendor_home/assets/favicon.ico" />
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v5.15.3/js/all.js" crossorigin="anonymous"></script>
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="vendor_home/css/styles.css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
 </head>
 <html>
   <style>::-webkit-scrollbar { display: none;}</style>

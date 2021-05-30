@@ -20,14 +20,16 @@ echo "COMPOSER - JSON DATA PROCESSING<br>";
 echo "https://rezzo.dev/<br>";
 echo "////////////////////////////////////<br>";
 
-$file = file_get_contents('Rust-RSRPGData.json', true);
+$file = file_get_contents('./rust-data/Rust-RSRPGData.json', true);
 $pdata = json_decode($file, true);
 
-$xptable = file_get_contents('xptable.json', true);
+$xptable = file_get_contents('./rust-data/xptable.json', true);
 $xpdata = json_decode($xptable, true);
+
 
 foreach($pdata["PLAYERS"] as $playerid => $file_row) {
     $id = $playerid;
+    $xp =0;
     $sn = mysqli_real_escape_string($local_link, $file_row['sn']);
     $n_xp = $file_row['xp'];
     $ul = $l = $file_row['l'];
@@ -35,23 +37,30 @@ foreach($pdata["PLAYERS"] as $playerid => $file_row) {
 
     $statp = $file_row['statp'];
     $skillp = $file_row['skillp'];
+    $i=0;
 
     //Set Key
-    foreach($xpdata["XPTABLE"] as $xpid => $xp_row) {
+    foreach($xpdata["XPTABLE"] as $xpid => $xp_row){
+        $i++;
+
+        if($xpid < $ul){
+            $xp=$xp+$xp_row;
+        }
         if ($xpid == $ul){ //test
-            $xp = $xp_row-$n_xp; //xp = Next Level XP - Needed XP
+           $xp = $xp-$n_xp; //xp = Next Level XP - Needed XP
             echo "<br>-- XPID --  ". $xpid . "<br> - Name:" . $sn . "<br> - Current LVL: " . $l . "<br> - Next LVL: " . $ul . "<br> - XP Needed: " . $n_xp . "<br> - XP Next Level: " . $xp_row . "<br> - Overall XP: "  . $xp . "<br>";
+            break;
         }
     }
 
     // Run this to add new users
-    //$query = "INSERT IGNORE INTO `hs_rust_main`(`hs_steamid`, `sn`, `l`, `xp`, `statp`, `skillp`) VALUES ('".$id."','".$sn."','".$l."','".$xp."','".$statp."','".$skillp."')";
-    //mysqli_query($local_link , $query);
+    $query = "INSERT IGNORE INTO `hs_rust_main`(`hs_steamid`, `sn`, `l`, `xp`, `statp`, `skillp`) VALUES ('".$id."','".$sn."','".$l."','".$xp."','".$statp."','".$skillp."')";
+    mysqli_query($local_link , $query);
     
-
+    
     //Run this to update xp.
-    //$qry_updt_user = "UPDATE `hs_rust_main` SET `xp`='".$xp."' WHERE `hs_steamid` = '".$id."'";
-    //mysqli_query($local_link, $qry_updt_user);
+    $qry_updt_user = "UPDATE `hs_rust_main` SET `xp`='".$xp."' WHERE `hs_steamid` = '".$id."'";
+    mysqli_query($local_link, $qry_updt_user);
 
 }
 ?>

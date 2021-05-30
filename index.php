@@ -15,6 +15,7 @@
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="vendor_home/css/styles.css" rel="stylesheet" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+        <script src="./vendor/uploadify/jquery.uploadifive.js" type="text/javascript"></script>
     </head>
 
 <?php 
@@ -36,10 +37,12 @@
   include('./ladders/ldr_geco.php');
   include('./ladders/ldr_gres.php');
   include('./ladders/ldr_gexp.php');
-  // blacklists
+  // lack Lists
   $banned_users = array("STEAM_0:1:25306470", "x"); //Player SteamID32
   $rust_banned_users = array("888777", "666888"); //Player SteamID32
   $banned_gangs = array("default_banned_gang-22-3", "default_banned_gang-22-2"); //Gang ID64
+  // White Lists
+  $rust_admins = array("76561197999834909", "76561197968614936"); //Player SteamID64
   //white Queries
   include('./queries/qry_pla.php');
   include('./queries/qry_eco.php');
@@ -63,6 +66,8 @@
 
   //Extras; (Funcs)
   include('./func/func_glow.php');
+  include('./func/func_profile_control.php');
+  include('./func/func_rust_admin.php');
 
   ///////////////////////////
   // Sign in Through Steam
@@ -75,7 +80,7 @@
 
       echo '<li class="nav-item"><a class="nav-link" href="?login">Sign In</a></li>';
       } else {
-      echo '<li class="nav-item"><a class="nav-link" href="profile.php">My Profile</a></li>';
+      echo '<li class="nav-item"><a class="nav-link" data-toggle="modal" data-target="#myprofile">My Profile</a></li>';
       echo '<li class="nav-item"><a class="nav-link" href="?logout">Sign Out</a></li>';
       }  
   }
@@ -608,7 +613,7 @@
             <label for="Sel1">To Qualify for the tool:</label><br>
             <label for="Sel1">- Have a registered player name.</label><br>
             <label for="Sel1">- More than 5 hours playtime.</label><br><br>
-            <label for="Sel1">You can sign in throguh steam to Opt-Out of Player Look up.</label><br><br>
+            <label for="Sel1">You can sign in through steam to Opt-Out of Player Look up.</label><br><br>
             <input type="text" class="form-control" placeholder="Filter by Name" id="FilterListPlayers">
             <div class="input-group mb-3">
               <select class="form-control" id="Sel1" name="users" onchange="showUser(this.value)">
@@ -818,6 +823,54 @@
       </table>
   </div>   
 </section>
+
+<!-- PROFILE -->
+    <div class="modal fade" id="myprofile" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content bg-dark text-white">
+          <div class="modal-header">
+            <h5 class="modal-title"><?php if(isset($_SESSION['steamid'])) {echo "Welcome to your profile, " . $steamprofile['personaname']. "\n"; } else {echo "User Not Signed in...? Error: SP1";}?></h5>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+            <label for="Sel1">Opt-In / Out of Features</label>
+            <?php 
+            if(isset($_SESSION['steamid'])){
+              //load profile controls (send steamid)
+            func_profile_control($steamprofile['steamid']);
+            } else {
+              echo "User Not signed in Error: SP5";
+            }
+            ?>
+              <div class="col-md-6">
+                <div id="profile-update-info">
+                  <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent border-white text-white">No changes detected.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <?php 
+                if(isset($_SESSION['steamid']) && in_array($steamprofile['steamid'], $rust_admins)){
+                //Load rust admin controls
+                func_rust_admin();
+                } else {
+                  echo "Rust Admin Status - False";
+                }
+                ?>
+            </div>
+          <div>
+          <div class="modal-footer">
+            <a class="btn btn-white" href="javascript:window.location.reload(true)">Refresh</a>
+            <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
 
 <script>
   // This nasty from a performance perspective but it works so screw  it.
@@ -1066,10 +1119,10 @@
 
   </script>
 
-
   <!-- Js. -->
   <script src="./vendor/chartjs/Chart.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
   <script src="./vendor/chosen/chosen.jquery.js" type="text/javascript"></script>
   <script src="./vendor/heatjs/simpleheat.js"></script>
   <script src="./vendor/anychartjs/anychart.js"></script>
@@ -1095,7 +1148,6 @@
   <script src="vendor_home/js/scripts.js"></script>
 
   <script>
-
   //Handling Player lookup AJAX request
   function showUser(str) {
     if (str == "") {
@@ -1139,83 +1191,45 @@
 
   });
 
-  //Handling Gang lookup AJAX request
-  function showGang(str) {
-    if (str == "") {
-      document.getElementById("gang-lookup-contents").innerHTML = "";
-      return;
-    } else {
-      var xmlhttp = new XMLHttpRequest();
-      xmlhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-          document.getElementById("gang-lookup-contents").innerHTML = this.responseText;
-        }
-      };
-      xmlhttp.open("GET","./queries/qry_ajx_ganglookup.php?q="+str,true);
-      xmlhttp.send();
-    }
+//Handling Gang lookup AJAX request
+function showGang(str) {
+  if (str == "") {
+    document.getElementById("gang-lookup-contents").innerHTML = "";
+    return;
+  } else {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        document.getElementById("gang-lookup-contents").innerHTML = this.responseText;
+      }
+    };
+    xmlhttp.open("GET","./queries/qry_ajx_ganglookup.php?q="+str,true);
+    xmlhttp.send();
   }
-  </script>
+}
+</script>
 
+<script>
+//Handling of updating the players opt-in/out status.
+function update(str_prfl) {
+  if (str_prfl == "") {
+    document.getElementById("profile-update-info").innerHTML = "";
+    return;
+  } else {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        document.getElementById("profile-update-info").innerHTML = this.responseText;
+      }
+    };
+    xmlhttp.open("GET","./queries/qry_ajx_prfl_flagset.php?q="+str_prfl,true);
+    xmlhttp.send();
+  }
+}
+</script>
 
   <script>
-  /*
-  //Scales
-  32768/32=1,024
-  32768/16=2,048
-  16384/32=512
-
-  North East - PD:                2945.59, 4374.06
-  North West - gun Store:        -1446.21, 2674.34
-  South West - Gas Station:      -1441.28, -2494.62
-  South Middle - Park Trash Can:  632.71, -590.15
-  South East - Cafe:              1858.37, -2493.40
-  South Middle - Bank:            1363.62, -790.12
-
-  -- Additional /2 is for a canvas size of 512x512, otherwise just do /32 for a 1024x1024 canvas.
-  [V1,V2,1]
-  //To get the Top Right Co-Ordinates 
-  V1+16,384/32/2 = V1 Result
-  V2/32/2 = V2 Result
-
-  [-V1,V2,1]
-  //To get the Top Left Co-Ordinates 
-  V1 Convert Positive -> V1/32/2 = V1 Result
-  16,384-V2/32/2 = V1 Result
-
-  [-V1,-V2,1]
-  //To get the Bottom Left Co-Ordinates 
-  V1 Convert Positive -> V1/32/2= V1 Result
-  V2 Convert Positive -> V2+16,384/32/2= V2 Result
-
-  [-V1,-V2,1]
-  //To get the Bottom right Co-Ordinates 
-  V1+16,384/32/2= V1 Result
-  32,768+V2/32/2= V2 Result
-
-  -- Scale 1024/1024 32 
-  [[604.04, 136.68,1], //pd TR
-  [45.19, 428.42,1], //gunstore TL
-  [45.03, 589.95,1],  // gas station BL
-  [570.07, 589.91,1], // cafe BR
-  [0, 1024,0.8],
-  [1024, 1024,0.9]];
-  */
-
-  //setpos 146.406250 1135.593750 371.843750
-  //[258.28, 17.74, 1]
-    /*var data = [[302.4, 68.34,1], //pd TR
-                [22.59, 214.21,1], //gunstore TL
-                [22.51, 473.03,1],  // gas station BL
-                [285.03, 473.04,1], // cafe BR  To go down, 32k+x/32/2
-                [258.28, 273, 0.9],
-                [0, 512,0.8],
-                [512, 512,0.9]];
-
-  simpleheat('hm-primary').data(data).draw();*/
-  // we aren't using simple heat but I'm keeping it in for now in the event I fall back on it.
-
-  //T2D for the cheatmap primary
+  //T2D for the heatmap primary
   var data = [
     {x: 92.049, value: 136.68},
     {x: -45.19, value: 83.57},
@@ -1286,6 +1300,5 @@
   chart.container("hm-primary");
   chart.draw();
 </script>
-
     </body>
 </html>

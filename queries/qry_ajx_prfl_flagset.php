@@ -9,5 +9,7 @@ $q = $_GET['q'];
 
     $qry_updt_flag = "UPDATE `hs_flags` SET `flag_pla_lookup`='".$q."' WHERE `steam_id` = '".$id."'";
     mysqli_query($local_link, $qry_updt_flag);
-    echo "Updated Opt-In Status to ". $q ." ON " . $id .". Please refresh the page to confirm the changes.";
+    echo "<ul class=\"list-group\">";
+    echo "<li class=\"list-group-item d-flex justify-content-between align-items-center bg-transparent border-white text-white\">Updated Opt-In Status to ". $q ." ON " . $id .". Please refresh the page and re-open your profile to confirm the changes.</li>";
+    echo "</ul>";
 ?>
